@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Sections>
+  <WaveBank Name="Wave Bank">Wave Bank
+{
+    Name = Wave Bank;
+    Xbox File = Xbox\Wave Bank.xwb;
+    Windows File = Win\Wave Bank.xwb;
+    Xbox Bank Path Edited = 0;
+    Windows Bank Path Edited = 0;
+    Seek Tables = 1;
+    Compression Preset Name = &lt;none&gt;;
+    Bank Last Revised Low = 1662492987;
+    Bank Last Revised High = 29957962;
+
+    Wave
+    {
+        Name = start;
+        File = start.wav;
+        Build Settings Last Modified Low = 3199842795;
+        Build Settings Last Modified High = 29957615;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 154410;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 756316416;
+            Last Modified High = 29945154;
+        }
+    }
+
+    Wave
+    {
+        Name = track;
+        File = track.wav;
+        Build Settings Last Modified Low = 3199852560;
+        Build Settings Last Modified High = 29957615;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 705600;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 756316416;
+            Last Modified High = 29945154;
+        }
+    }
+
+    Wave
+    {
+        Name = skullcollision;
+        File = skullcollision.wav;
+        Build Settings Last Modified Low = 1584991062;
+        Build Settings Last Modified High = 29957618;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 89872;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 756316416;
+            Last Modified High = 29945154;
+        }
+    }
+
+    Wave
+    {
+        Name = boltcollision;
+        File = boltcollision.wav;
+        Build Settings Last Modified Low = 3073922431;
+        Build Settings Last Modified High = 29957961;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 214888;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 4290637056;
+            Last Modified High = 29945439;
+        }
+    }
+
+    Wave
+    {
+        Name = fourbladescollision;
+        File = fourbladescollision.wav;
+        Build Settings Last Modified Low = 3073952431;
+        Build Settings Last Modified High = 29957961;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 200152;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 4290637056;
+            Last Modified High = 29945439;
+        }
+    }
+
+    Wave
+    {
+        Name = pluscollision;
+        File = pluscollision.wav;
+        Build Settings Last Modified Low = 3073982431;
+        Build Settings Last Modified High = 29957961;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 75120;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 4290637056;
+            Last Modified High = 29945439;
+        }
+    }
+
+    Wave
+    {
+        Name = threebladescollision;
+        File = threebladescollision.wav;
+        Build Settings Last Modified Low = 3074012431;
+        Build Settings Last Modified High = 29957961;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 1;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 419846;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 4290637056;
+            Last Modified High = 29945439;
+        }
+    }
+}
+
+</WaveBank>
+</Sections>

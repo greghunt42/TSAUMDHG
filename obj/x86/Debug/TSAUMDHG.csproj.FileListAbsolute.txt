@@ -1,0 +1,34 @@
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\background.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\bolt.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\fourblades.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\plus.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\skullball.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\threeblades.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\threerings.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\boltcollision.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\fourbladescollision.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\pluscollision.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\skullcollision.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\start.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\threebladescollision.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\track.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Font\Arial.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\GameAudio.xgs
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\Wave Bank.xwb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\Sound Bank.xsb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\TSAUMDHG.exe
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\TSAUMDHG.pdb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\TSAUMDHG.exe
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\TSAUMDHG.pdb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\bend.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\grass.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\path.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\TSAUMDHG.exe.manifest
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\TSAUMDHG.application
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\TSAUMDHG.exe.manifest
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\obj\x86\Debug\TSAUMDHG.application
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\acid.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\tower.xnb
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\unit.xnb

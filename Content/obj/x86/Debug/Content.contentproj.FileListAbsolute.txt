@@ -1,0 +1,2 @@
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\Content\obj\x86\Debug\Audio\GameAudio.xml
