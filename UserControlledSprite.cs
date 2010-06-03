@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,122 +53,13 @@ namespace TSAUMDHG
             }
         }
 
-        public void Update(GameTime gameTime, Rectangle clientBounds, List<MapSprite> pathList)
+        public Vector2 UpdatePosition(List<MapSprite> pathList)
         {
             MapSprite currentPathSprite = null;
             Vector2 newPosition = position;
             float offset = 0.0f;
-            bool pathFound = false;
 
-            //Remove all 
-            
-            /*Point north = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == (xPosFloor * 50) && point.Y == ((yPosFloor - 1) * 50);
-                    }
-                     */
-                    //return point.X == (xPosFloor * 50) && point.Y == (yPosFloor * 50);
-                    //return (point.X >= (xPosFloor * 50) && point.X <= (xPosCeiling * 50)) && point.Y == ((yPosFloor - 1) * 50);
-                //});
-
-            /*Point south = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosCeiling * 50) == ((Math.Floor(position.Y / 50) * 50) ))
-                    {
-                        return point.X == (xPosFloor * 50) && point.Y == ((yPosCeiling + 1) * 50);
-                    }
-                     */
-                    //return (point.X >= (xPosFloor * 50) && point.X <= (xPosCeiling * 50)) && point.Y == ((yPosFloor + 1) * 50);
-                //});
-
-            /*Point east = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosCeiling * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == ((xPosCeiling + 1) * 50) && point.Y == (yPosFloor * 50);
-                    }
-                     */
-                    //return point.X == ((xPosFloor + 1) * 50) && (point.Y >= (yPosFloor * 50) && point.Y <= (yPosCeiling * 50));
-                //});
-
-            /*Point west = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == ((xPosFloor - 1) * 50) && point.Y == (yPosFloor * 50);
-                    }
-                     */
-                    //return point.X == ((xPosFloor - 1) * 50) && point.Y == (yPosFloor * 50);
-                //});
-            
-
-            // Move the sprite according to the direction property
-            //
-            //Commented out mouse support to force user to use keyboard
-            //
-            //// If the mouse moved, set the position of the sprite to the mouse position
-            //MouseState currMouseState = Mouse.GetState();
-
-            //if (currMouseState.X != prevMouseState.X ||
-            //currMouseState.Y != prevMouseState.Y)
-            //{
-            //    position = new Vector2(currMouseState.X, currMouseState.Y);
-            //}
-            //prevMouseState = currMouseState;
-
-            // If the sprite is off the screen, put it back in play
-            /*
-            if (position.X < 0)
-            {
-                position.X = 0;
-            }
-            if (position.Y < 0)
-            {
-                position.Y = 0;
-            }
-            if (position.X > clientBounds.Width - frameSize.X)
-            {
-                position.X = clientBounds.Width - frameSize.X;
-            }
-            if (position.Y > clientBounds.Height - frameSize.Y)
-            {
-                position.Y = clientBounds.Height - frameSize.Y;
-            }
-             */
-            /*if (north.Equals(new Point(0, 0)) && position.Y < (yPosCeiling) * 50)
-            {
-                position.Y = ((yPosCeiling) * 50);
-            }
-            if (south.Equals(new Point(0, 0)) && position.Y > (yPosFloor) * 50)
-            {
-                position.Y = ((yPosFloor) * 50);
-            }
-            if (east.Equals(new Point(0, 0)) && position.X > (xPosCeiling) * 50)
-            {
-                position.X = ((xPosCeiling) * 50);
-            }
-            if (west.Equals(new Point(0, 0)) && position.X < (xPosFloor) * 50)
-            {
-                position.X = ((xPosCeiling) * 50);
-            }*/
-
-            if (direction.X != 0.0f)
-            {
-                int i = 3;
-                i += 3;
-            }
-
-            if (direction.X < 0)
+            if (direction.X < 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
@@ -176,6 +67,44 @@ namespace TSAUMDHG
                     offset = ((position.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
 
                     if (((position.X - (position.X % pathList[index].GetFrameSize.X)) - pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
+                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
+                    {
+                        currentPathSprite = pathList[index];
+                    }
+                }
+
+                if (position.Y % pathList[0].GetFrameSize.Y == 0)
+                {
+
+                }
+                if (currentPathSprite != null)
+                {
+                    newPosition.X += direction.X;
+                }
+                else
+                {
+                    offset = position.X % pathList[0].GetFrameSize.X;
+
+                    if (offset > Math.Abs(direction.X))
+                    {
+                        newPosition.X += direction.X;
+                    }
+                    else
+                    {
+                        newPosition.X -= (position.X % pathList[0].GetFrameSize.X);
+                    }
+
+                }
+            }
+
+            if (direction.X > 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
+            {
+                currentPathSprite = null;
+                for (int index = 0; index < pathList.Count; index++)
+                {
+                    offset = ((position.X + pathList[index].GetFrameSize.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
+
+                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) + pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
                           (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
                     {
                         currentPathSprite = pathList[index];
@@ -202,41 +131,7 @@ namespace TSAUMDHG
                 }
             }
 
-            if (direction.X > 0)
-            {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
-                {
-                    offset = ((position.X + pathList[index].GetFrameSize.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
-                    
-                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) + pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
-                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
-                    {
-                        currentPathSprite = pathList[index];
-                    }
-                }
-
-                if (currentPathSprite != null)
-                {
-                    newPosition.X += direction.X;
-                }
-                else
-                {
-                    offset = position.X % pathList[0].GetFrameSize.X;
-
-                    if (offset > Math.Abs(direction.X))
-                    {
-                        newPosition.X += direction.X;
-                    }
-                    else
-                    {
-                        newPosition.X += (position.X % pathList[0].GetFrameSize.X);
-                    }
-
-                }
-            }
-
-            if (direction.Y < 0)
+            if (direction.Y < 0 && position.X % pathList[0].GetFrameSize.X == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
@@ -268,7 +163,7 @@ namespace TSAUMDHG
                 }
             }
 
-            if (direction.Y > 0)
+            if (direction.Y > 0 && position.X % pathList[0].GetFrameSize.X == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
@@ -286,7 +181,9 @@ namespace TSAUMDHG
                 }
                 else
                 {
-                    offset = position.Y % pathList[0].GetFrameSize.Y;
+                    offset = (position.Y) % pathList[0].GetFrameSize.Y;
+
+
 
                     if (offset > Math.Abs(direction.Y))
                     {
@@ -294,13 +191,18 @@ namespace TSAUMDHG
                     }
                     else
                     {
-                        newPosition.Y += (position.Y % pathList[0].GetFrameSize.Y);
+                        newPosition.Y -= offset;
                     }
-                    
+
                 }
             }
 
-            position = newPosition;
+            return newPosition;
+        }
+
+        public void Update(GameTime gameTime, Rectangle clientBounds, List<MapSprite> pathList)
+        {
+            position = UpdatePosition(pathList);
 
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
             if((timeSinceLastFrame > base.GetMillisecondsPerFrame) &&
