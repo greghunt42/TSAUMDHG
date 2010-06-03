@@ -12,20 +12,28 @@ namespace TSAUMDHG
     {
         //Mouse movement
         //MouseState prevMouseState;
+        protected bool startTile = false;
 
         public MapSprite(Texture2D textureImage, Vector2 position,
             Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, float rotation, Vector2 origin)
+            Vector2 speed, float rotation, Vector2 origin, bool startTile)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame,
             sheetSize, speed, null, 0, rotation, origin)
         {
+            this.startTile = startTile;
         }
         public MapSprite(Texture2D textureImage, Vector2 position,
             Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, int millisecondsPerFrame, float rotation, Vector2 origin)
+            Vector2 speed, int millisecondsPerFrame, float rotation, Vector2 origin, bool startTile)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame,
             sheetSize, speed, millisecondsPerFrame, null, 0, rotation, origin)
         {
+            this.startTile = startTile;
+        }
+
+        public bool IsStart()
+        {
+            return startTile;
         }
 
         public override Vector2 direction
