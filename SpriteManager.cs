@@ -21,6 +21,7 @@ namespace TSAUMDHG
     {
         SpriteBatch spriteBatch;
         UserControlledSprite player;
+        UnitSprite unit;
         TowerSprite tower;
         List<UserControlledSprite> spriteList = new List<UserControlledSprite>();
         List<MapSprite> mapList = new List<MapSprite>();
@@ -28,6 +29,7 @@ namespace TSAUMDHG
         const float NintyDegrees = (float)(Math.PI * 90 / 180.0);
         const float OneEightyDegrees = (float)(Math.PI);
         const float TwoSeventyDegrees = (float)(Math.PI * 270 / 180.0);
+        const float TileSize = 50.0f;
         Point MinPoint = new Point(Int32.MinValue, Int32.MinValue);
 
         //Spawning variables
@@ -71,6 +73,9 @@ namespace TSAUMDHG
         /// </summary>
         public override void Initialize()
         {
+
+            GeneratePath();
+            pathList = new List<MapSprite>();
             // TODO: Add your initialization code here
             for (int x = -100; x < ((Game1)Game).Window.ClientBounds.Width + 100; x += 50)
             {
@@ -81,10 +86,20 @@ namespace TSAUMDHG
                         ((x / 50) == 6 && (y / 50) < 7 && (y / 50) > 1) ||
                         ((x / 50) == 21 && (y / 50) > 1))
                     {
-                        pathList.Add(new MapSprite(
+                        if (x == 150 && y == -100)
+                        {
+                            pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(x, y), new Point(50, 50), 10,
+                                new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                        }
+                        else
+                        {
+                            pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\path"),
                             new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                        }
                     }
                     else if (((y / 50) == 12 && (x / 50) > 3 && (x / 50) < 18) ||
                              ((y / 50) == 7 && (x / 50) > 6 && (x / 50) < 18) ||
@@ -93,7 +108,7 @@ namespace TSAUMDHG
                         pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\path"),
                             new Vector2(x + 1, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75), false));
                     }
                     else if (((x / 50) == 3 && (y / 50) == 12) ||
                              ((x / 50) == 6 && (y / 50) == 7))
@@ -101,14 +116,14 @@ namespace TSAUMDHG
                         pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\bend"),
                             new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                     }
                     else if ((x / 50) == 18 && (y / 50) == 12)
                     {
                         pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\bend"),
                             new Vector2(x, y + 1), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, TwoSeventyDegrees, new Vector2(75, 25)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, TwoSeventyDegrees, new Vector2(75, 25), false));
                     }
                     else if (((x / 50) == 18 && (y / 50) == 7) ||
                              ((x / 50) == 21 && (y / 50) == 1))
@@ -116,14 +131,14 @@ namespace TSAUMDHG
                         pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\bend"),
                             new Vector2(x + 1, y + 1), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees * 2, new Vector2(75, 75)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees * 2, new Vector2(75, 75), false));
                     }
                     else if ((x / 50) == 6 && (y / 50) == 1)
                     {
                         pathList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\bend"),
                             new Vector2(x + 1, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75), false));
                     }
                 }
             }
@@ -137,6 +152,7 @@ namespace TSAUMDHG
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             MapSprite currentPathSprite = null;
+            Point startTile = new Point(Int32.MinValue, Int32.MinValue);
             
             for (int x = -100; x < ((Game1)Game).Window.ClientBounds.Width + 100; x += 50)
             {
@@ -150,30 +166,42 @@ namespace TSAUMDHG
                     if (currentPathSprite != null)
                     {
                         mapList.Add(currentPathSprite);
+                        
+                        if (currentPathSprite.IsStart())
+                        {
+                            startTile = currentPathSprite.GetCurrentFrame;
+                        }
                     }
                     else
                     {
                         mapList.Add(new MapSprite(
                             Game.Content.Load<Texture2D>(@"images\grass"),
                             new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 0, 0f, new Vector2(25, 25)));
+                            new Point(x, y), new Point(1, 1), Vector2.Zero, 0, 0f, new Vector2(25, 25), false));
                     }
                 }
             }
             player = new UserControlledSprite(
                 Game.Content.Load<Texture2D>(@"Images/unit"),
-                new Vector2(pathList[05].GetCurrentFrame.X, pathList[5].GetCurrentFrame.Y),
+                new Vector2(startTile.X, startTile.Y),
                 new Point(177, 139), 10, new Point(0, 0),
                 new Point(1, 2), new Vector2(6, 6), 120, new Vector2(52, 69));
             player.ModifyScale(0.35f);
             spriteList.Add(player);
+
+            unit = new UnitSprite(
+                Game.Content.Load<Texture2D>(@"Images/unit"),
+                new Vector2(startTile.X, startTile.Y),
+                new Point(177, 139), 10, new Point(0, 0),
+                new Point(1, 2), new Vector2(6, 6), 120, new Vector2(52, 69), startTile);
+            unit.ModifyScale(0.35f);
             
-            tower = new TowerSprite(
+            /*tower = new TowerSprite(
                 Game.Content.Load<Texture2D>(@"Images/tower"),
                 new Vector2(50 * 4, 50 * 6),
                 new Point(144, 144), 10, new Point(0, 0),
                 new Point(9, 0), new Vector2(6, 6), 1200, 300f, 30f, 10, new Vector2(72, 72));
-            tower.ModifyScale(0.4f);
+            tower.ModifyScale(0.4f);*/
 
             base.LoadContent();
         }
@@ -209,7 +237,7 @@ namespace TSAUMDHG
             // Update player
             player.Update(gameTime, Game.Window.ClientBounds, pathList);
 
-            tower.Update(gameTime, Game.Window.ClientBounds, spriteList);
+            //tower.Update(gameTime, Game.Window.ClientBounds, spriteList);
 
             // Update all non-player sprites
             /*for (int i = 0; i < spriteList.Count; ++i)
@@ -271,7 +299,129 @@ namespace TSAUMDHG
             //foreach (Sprite sprite in livesList)
                 //sprite.Update(gameTime, Game.Window.ClientBounds);
         }
-/*
+
+        public void GeneratePath()
+        {
+            pathList = new List<MapSprite>();
+            Point start, end = new Point();
+            
+            bool buildingPath = true;
+            //Pick a side of the map to start from as well as a corner of that side.
+            Random rand = new Random();
+            //Top: 1 Bottom: 2 Left: 3 Right: 4
+            int startSide = rand.Next(1, 5);
+            int endSide = rand.Next(1, 5);
+            int startCorner = rand.Next(1, 3);
+            int endCorner = rand.Next(1, 3);
+
+            if (startSide == endSide && startCorner == endCorner)
+            {
+                endCorner = (endCorner % 2) + 1;
+            }
+
+            if (startSide <= 2)
+            {
+                if (startCorner > 1)
+                {
+                    start.X = 50 * rand.Next((((Game1)Game).Window.ClientBounds.Width - (((Game1)Game).Window.ClientBounds.Width / 4)) / 50,
+                                             (((Game1)Game).Window.ClientBounds.Width / 50));
+                }
+                else
+                {
+                    start.X = 50 * rand.Next(1,
+                                              ((((Game1)Game).Window.ClientBounds.Width / 4) / 50) + 1);
+                }
+                if (startSide == 1)
+                {
+                    start.Y = -100;
+                }
+                else
+                {
+                    start.Y = ((Game1)Game).Window.ClientBounds.Height + 100;
+                }
+
+            }
+            else
+            {
+                if (startCorner > 1)
+                {
+                    start.Y = 50 * rand.Next((((Game1)Game).Window.ClientBounds.Height - (((Game1)Game).Window.ClientBounds.Height / 4)) / 50,
+                                             (((Game1)Game).Window.ClientBounds.Height / 50));
+                }
+                else
+                {
+                    start.Y = 50 * rand.Next(1,
+                                              ((((Game1)Game).Window.ClientBounds.Height / 4) / 50) + 1);
+                }
+                if (startSide == 3)
+                {
+                    start.X = -100;
+                }
+                else
+                {
+                    start.X = ((Game1)Game).Window.ClientBounds.Width + 100;
+                }
+            }
+
+            //Find the end point
+            if (endSide <= 2)
+            {
+                if (endCorner > 1)
+                {
+                    end.X = 50 * rand.Next((((Game1)Game).Window.ClientBounds.Width - (((Game1)Game).Window.ClientBounds.Width / 4)) / 50,
+                                             (((Game1)Game).Window.ClientBounds.Width / 50));
+                }
+                else
+                {
+                    end.X = 50 * rand.Next(1,
+                                              ((((Game1)Game).Window.ClientBounds.Width / 4) / 50) + 1);
+                }
+                if (endSide == 1)
+                {
+                    end.Y = -100;
+                }
+                else
+                {
+                    end.Y = ((Game1)Game).Window.ClientBounds.Height + 100;
+                }
+
+            }
+            else
+            {
+                if (endCorner > 1)
+                {
+                    end.Y = 50 * rand.Next((((Game1)Game).Window.ClientBounds.Height - (((Game1)Game).Window.ClientBounds.Height / 4)) / 50,
+                                             (((Game1)Game).Window.ClientBounds.Height / 50));
+                }
+                else
+                {
+                    end.Y = 50 * rand.Next(1,
+                                              ((((Game1)Game).Window.ClientBounds.Height / 4) / 50) + 1);
+                }
+                if (endSide == 3)
+                {
+                    end.X = -100;
+                }
+                else
+                {
+                    end.X = ((Game1)Game).Window.ClientBounds.Width + 100;
+                }
+            }
+
+            double mapParimeter = 2 * (((Game1)Game).Window.ClientBounds.Width + ((Game1)Game).Window.ClientBounds.Height);
+
+
+            while (buildingPath && pathList.Count < 25)
+            {
+
+                if (true)
+                {
+                    buildingPath = false;
+                }
+            }
+        }
+        
+        /*
         protected void CheckPowerUpExpiration(GameTime gameTime)
         {
             // Is a power-up active?
@@ -306,7 +456,7 @@ namespace TSAUMDHG
             // Draw the player
             player.Draw(gameTime, spriteBatch);
 
-            tower.Draw(gameTime, spriteBatch);
+            //tower.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
             
