@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,20 +12,28 @@ namespace TSAUMDHG
     {
         //Mouse movement
         //MouseState prevMouseState;
+        bool startTile = false;
 
         public MapSprite(Texture2D textureImage, Vector2 position,
             Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, float rotation, Vector2 origin)
+            Vector2 speed, float rotation, Vector2 origin, bool startTile)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame,
             sheetSize, speed, null, 0, rotation, origin)
         {
+            this.startTile = startTile;
         }
         public MapSprite(Texture2D textureImage, Vector2 position,
             Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, int millisecondsPerFrame, float rotation, Vector2 origin)
+            Vector2 speed, int millisecondsPerFrame, float rotation, Vector2 origin, bool startTile)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame,
             sheetSize, speed, millisecondsPerFrame, null, 0, rotation, origin)
         {
+            this.startTile = startTile;
+        }
+
+        public bool IsStart()
+        {
+            return startTile;
         }
 
         public override Vector2 direction
@@ -89,7 +97,7 @@ namespace TSAUMDHG
             //Draw the sprite
             spriteBatch.Draw(base.textureImage,
                 new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y),
-                new Rectangle(0, 0,textureImage.Height, textureImage.Width),
+                new Rectangle(0, 0, textureImage.Height, textureImage.Width),
                 Color.White, rotation, origin, SpriteEffects.None, 0);
         }
     }
