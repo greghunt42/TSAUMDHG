@@ -29,7 +29,7 @@ namespace TSAUMDHG
         const float NintyDegrees = (float)(Math.PI * 90 / 180.0);
         const float OneEightyDegrees = (float)(Math.PI);
         const float TwoSeventyDegrees = (float)(Math.PI * 270 / 180.0);
-        const float TileSize = 50.0f;
+        const int TileSize = 50;
         Point MinPoint = new Point(Int32.MinValue, Int32.MinValue);
 
         //Spawning variables
@@ -333,11 +333,39 @@ namespace TSAUMDHG
                 }
                 if (startSide == 1)
                 {
-                    start.Y = -100;
+                    start.Y = -2 * TileSize;
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
+                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y + TileSize), new Point(50, 50), 10,
+                                new Point(start.X, start.Y + TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y + (2 * TileSize)), new Point(50, 50), 10,
+                                new Point(start.X, start.Y + (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
-                    start.Y = ((Game1)Game).Window.ClientBounds.Height + 100;
+                    start.Y = ((Game1)Game).Window.ClientBounds.Height + (2* TileSize);
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
+                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y - TileSize), new Point(50, 50), 10,
+                                new Point(start.X, start.Y - TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y - (2 * TileSize)), new Point(50, 50), 10,
+                                new Point(start.X, start.Y - (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
 
             }
@@ -355,11 +383,39 @@ namespace TSAUMDHG
                 }
                 if (startSide == 3)
                 {
-                    start.X = -100;
+                    start.X = -2 * TileSize;
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
+                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X + TileSize, start.Y), new Point(50, 50), 10,
+                                new Point(start.X + TileSize, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X + (2 * TileSize), start.Y), new Point(50, 50), 10,
+                                new Point(start.X + (2 * TileSize), start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
-                    start.X = ((Game1)Game).Window.ClientBounds.Width + 100;
+                    start.X = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
+                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X - TileSize, start.Y), new Point(50, 50), 10,
+                                new Point(start.X - TileSize, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X - (2 * TileSize), start.Y), new Point(50, 50), 10,
+                                new Point(start.X - (2 * TileSize), start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
             }
 
@@ -378,13 +434,40 @@ namespace TSAUMDHG
                 }
                 if (endSide == 1)
                 {
-                    end.Y = -100;
+                    end.Y = -2 * TileSize;
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
+                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y + TileSize), new Point(50, 50), 10,
+                                new Point(end.X, end.Y + TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y + (2 * TileSize)), new Point(50, 50), 10,
+                                new Point(end.X, end.Y + (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
-                    end.Y = ((Game1)Game).Window.ClientBounds.Height + 100;
-                }
+                    end.Y = ((Game1)Game).Window.ClientBounds.Height + (2* TileSize);
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
+                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y - TileSize), new Point(50, 50), 10,
+                                new Point(end.X, end.Y - TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
 
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y - (2 * TileSize)), new Point(50, 50), 10,
+                                new Point(end.X, end.Y - (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                }
             }
             else
             {
@@ -400,15 +483,43 @@ namespace TSAUMDHG
                 }
                 if (endSide == 3)
                 {
-                    end.X = -100;
+                    end.X = -2 * TileSize;
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
+                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X + TileSize, end.Y), new Point(50, 50), 10,
+                                new Point(end.X + TileSize, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X + (2 * TileSize), end.Y), new Point(50, 50), 10,
+                                new Point(end.X + (2 * TileSize), end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
-                    end.X = ((Game1)Game).Window.ClientBounds.Width + 100;
+                    end.X = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
+                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X - TileSize, end.Y), new Point(50, 50), 10,
+                                new Point(end.X - TileSize, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+
+                    pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(end.X - (2 * TileSize), end.Y), new Point(50, 50), 10,
+                                new Point(end.X - (2 * TileSize), end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
             }
 
-            double mapParimeter = 2 * (((Game1)Game).Window.ClientBounds.Width + ((Game1)Game).Window.ClientBounds.Height);
+            //double mapParimeter = 2 * (((Game1)Game).Window.ClientBounds.Width + ((Game1)Game).Window.ClientBounds.Height);
 
 
             while (buildingPath && pathList.Count < 25)
