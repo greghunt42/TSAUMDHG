@@ -31,6 +31,7 @@ namespace TSAUMDHG
         const float TwoSeventyDegrees = (float)(Math.PI * 270 / 180.0);
         const int TileSize = 50;
         Point MinPoint = new Point(Int32.MinValue, Int32.MinValue);
+        Random rand = new Random();
 
         //Spawning variables
         /*
@@ -142,7 +143,7 @@ namespace TSAUMDHG
                     }
                 }
             }
-            
+
             base.Initialize();
 
             //ResetSpawnTime();
@@ -153,7 +154,7 @@ namespace TSAUMDHG
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             MapSprite currentPathSprite = null;
             Point startTile = new Point(Int32.MinValue, Int32.MinValue);
-            
+
             for (int x = -100; x < ((Game1)Game).Window.ClientBounds.Width + 100; x += 50)
             {
                 for (int y = -100; y < ((Game1)Game).Window.ClientBounds.Height + 100; y += 50)
@@ -166,7 +167,7 @@ namespace TSAUMDHG
                     if (currentPathSprite != null)
                     {
                         mapList.Add(currentPathSprite);
-                        
+
                         if (currentPathSprite.IsStart())
                         {
                             startTile = currentPathSprite.GetCurrentFrame;
@@ -195,7 +196,7 @@ namespace TSAUMDHG
                 new Point(177, 139), 10, new Point(0, 0),
                 new Point(1, 2), new Vector2(6, 6), 120, new Vector2(52, 69), startTile);
             unit.ModifyScale(0.35f);
-            
+
             /*tower = new TowerSprite(
                 Game.Content.Load<Texture2D>(@"Images/tower"),
                 new Vector2(50 * 4, 50 * 6),
@@ -297,22 +298,34 @@ namespace TSAUMDHG
             */
             //Update the lives left sprites
             //foreach (Sprite sprite in livesList)
-                //sprite.Update(gameTime, Game.Window.ClientBounds);
+            //sprite.Update(gameTime, Game.Window.ClientBounds);
         }
 
         public void GeneratePath()
         {
             pathList = new List<MapSprite>();
-            Point start, end = new Point();
-            
+            Point start, end, current = new Point();
+
             bool buildingPath = true;
             //Pick a side of the map to start from as well as a corner of that side.
-            Random rand = new Random();
             //Top: 1 Bottom: 2 Left: 3 Right: 4
             int startSide = rand.Next(1, 5);
             int endSide = rand.Next(1, 5);
             int startCorner = rand.Next(1, 3);
             int endCorner = rand.Next(1, 3);
+
+            int weightPool = 100;
+            int northWeight = 0;
+            int southWeight = 0;
+            int eastWeight = 0;
+            int westWeight = 0;
+
+            int southOutput = 0;
+            int northOutput = 0;
+            int eastOutput = 0;
+            int westOutput = 0;
+
+
 
             if (startSide == endSide && startCorner == endCorner)
             {
@@ -334,38 +347,24 @@ namespace TSAUMDHG
                 if (startSide == 1)
                 {
                     start.Y = -2 * TileSize;
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
-                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
-                    
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y + TileSize), new Point(50, 50), 10,
-                                new Point(start.X, start.Y + TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
 
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y + (2 * TileSize)), new Point(50, 50), 10,
-                                new Point(start.X, start.Y + (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                    //Go south!
+                    southWeight = weightPool;
+                    weightPool -= southWeight;
+                    northWeight = weightPool;
+                    eastWeight = weightPool;
+                    westWeight = weightPool;
                 }
                 else
                 {
-                    start.Y = ((Game1)Game).Window.ClientBounds.Height + (2* TileSize);
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
-                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
+                    start.Y = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
                     
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y - TileSize), new Point(50, 50), 10,
-                                new Point(start.X, start.Y - TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y - (2 * TileSize)), new Point(50, 50), 10,
-                                new Point(start.X, start.Y - (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                    //Go north!
+                    northWeight = weightPool;
+                    weightPool -= northWeight;
+                    southWeight = weightPool;
+                    eastWeight = weightPool;
+                    westWeight = weightPool;
                 }
 
             }
@@ -384,38 +383,24 @@ namespace TSAUMDHG
                 if (startSide == 3)
                 {
                     start.X = -2 * TileSize;
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
-                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
                     
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X + TileSize, start.Y), new Point(50, 50), 10,
-                                new Point(start.X + TileSize, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X + (2 * TileSize), start.Y), new Point(50, 50), 10,
-                                new Point(start.X + (2 * TileSize), start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                    //Go east!
+                    eastWeight = weightPool;
+                    weightPool -= eastWeight;
+                    northWeight = weightPool;
+                    southWeight = weightPool;
+                    westWeight = weightPool;
                 }
                 else
                 {
                     start.X = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
-                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
                     
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X - TileSize, start.Y), new Point(50, 50), 10,
-                                new Point(start.X - TileSize, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(start.X - (2 * TileSize), start.Y), new Point(50, 50), 10,
-                                new Point(start.X - (2 * TileSize), start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                    //Go west!
+                    westWeight = weightPool;
+                    weightPool -= westWeight;
+                    northWeight = weightPool;
+                    eastWeight = weightPool;
+                    southWeight = weightPool;
                 }
             }
 
@@ -435,38 +420,10 @@ namespace TSAUMDHG
                 if (endSide == 1)
                 {
                     end.Y = -2 * TileSize;
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
-                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
-                    
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y + TileSize), new Point(50, 50), 10,
-                                new Point(end.X, end.Y + TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y + (2 * TileSize)), new Point(50, 50), 10,
-                                new Point(end.X, end.Y + (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
-                    end.Y = ((Game1)Game).Window.ClientBounds.Height + (2* TileSize);
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
-                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
-                    
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y - TileSize), new Point(50, 50), 10,
-                                new Point(end.X, end.Y - TileSize), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y - (2 * TileSize)), new Point(50, 50), 10,
-                                new Point(end.X, end.Y - (2 * TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                    end.Y = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
                 }
             }
             else
@@ -484,54 +441,178 @@ namespace TSAUMDHG
                 if (endSide == 3)
                 {
                     end.X = -2 * TileSize;
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
-                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X + TileSize, end.Y), new Point(50, 50), 10,
-                                new Point(end.X + TileSize, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X + (2 * TileSize), end.Y), new Point(50, 50), 10,
-                                new Point(end.X + (2 * TileSize), end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
                 else
                 {
                     end.X = ((Game1)Game).Window.ClientBounds.Height + (2 * TileSize);
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X, end.Y), new Point(50, 50), 10,
-                                new Point(end.X, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), true));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X - TileSize, end.Y), new Point(50, 50), 10,
-                                new Point(end.X - TileSize, end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
-
-                    pathList.Add(new MapSprite(
-                                Game.Content.Load<Texture2D>(@"images\path"),
-                                new Vector2(end.X - (2 * TileSize), end.Y), new Point(50, 50), 10,
-                                new Point(end.X - (2 * TileSize), end.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
                 }
             }
+
+            current = start;
+
+            pathList.Add(new MapSprite(
+                                Game.Content.Load<Texture2D>(@"images\path"),
+                                new Vector2(start.X, start.Y), new Point(50, 50), 10,
+                                new Point(start.X, start.Y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
 
             //double mapParimeter = 2 * (((Game1)Game).Window.ClientBounds.Width + ((Game1)Game).Window.ClientBounds.Height);
 
 
-            while (buildingPath && pathList.Count < 25)
+            while (buildingPath)
             {
-
-                if (true)
+                northOutput = northWeight * rand.Next(100);
+                southOutput = southWeight * rand.Next(100);
+                eastOutput = eastWeight * rand.Next(100);
+                westOutput = westWeight * rand.Next(100);
+                
+                //Do we go north?
+                if (northOutput > southOutput && northOutput > eastOutput && 
+                    northOutput > westOutput)
                 {
-                    buildingPath = false;
+                    GoNorth(current);
                 }
+                else if (southOutput > northOutput && southOutput > eastOutput &&
+                         southOutput > westOutput)
+                {
+                    GoSouth(current);
+                }
+                else if (eastOutput > northOutput && eastOutput > southOutput &&
+                         eastOutput > westOutput)
+                {
+                    GoEast(current);
+                }
+                else
+                {
+                    GoWest(current);
+                }
+
             }
         }
-        
+
+        private Point GoNorth( Point current )
+        {
+            int counter;
+            int pathLength = 0;
+            int closestTile = Int32.MaxValue;
+
+            if (pathList.Count > 1)
+            {
+                foreach (MapSprite tile in pathList)
+                {
+                    if (tile.GetCurrentFrame.X == current.X && tile.GetCurrentFrame.Y < current.Y && 
+                        closestTile > tile.GetCurrentFrame.Y)
+                    {
+                        closestTile = tile.GetCurrentFrame.Y;
+                    }
+                }
+
+                pathLength = rand.Next(1, 5);
+
+                if (pathLength >= closestTile)
+                {
+                    pathLength = closestTile - 1;
+                }
+            }
+            else
+            {
+                pathLength = 4;
+            }
+
+            for ( counter = 1; counter < pathLength; counter++ )
+            {
+                pathList.Add(new MapSprite(
+                            Game.Content.Load<Texture2D>(@"images\path"),
+                            new Vector2(current.X, (current.Y - TileSize)), new Point(50, 50), 10,
+                            new Point(current.X, (current.Y - TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                current.Y -= TileSize;
+            }
+
+            return current;
+        }
+
+        private void GoSouth( Point current )
+        {
+            int counter;
+            int pathLength = 0;
+            int closestTile = Int32.MinValue;
+
+            if (pathList.Count > 1)
+            {
+                foreach (MapSprite tile in pathList)
+                {
+                    if (tile.GetCurrentFrame.X == current.X && tile.GetCurrentFrame.Y < current.Y &&
+                        closestTile < tile.GetCurrentFrame.Y)
+                    {
+                        closestTile = tile.GetCurrentFrame.Y;
+                    }
+                }
+
+                pathLength = rand.Next(1, 5);
+
+                if (pathLength >= closestTile)
+                {
+                    pathLength = closestTile - 1;
+                }
+            }
+            else
+            {
+                pathLength = 4;
+            }
+
+            for (counter = 1; counter < pathLength; counter++)
+            {
+                pathList.Add(new MapSprite(
+                            Game.Content.Load<Texture2D>(@"images\path"),
+                            new Vector2(current.X, (current.Y + TileSize)), new Point(50, 50), 10,
+                            new Point(current.X, (current.Y + TileSize)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+                current.Y += TileSize;
+            }
+
+            return current;
+        }
+
+        private void GoEast( Point current )
+        {
+            int counter;
+            int pathLength = 0;
+            int closestTile = 0;
+
+            if (pathList.Count > 1)
+            {
+                foreach (MapSprite tile in pathList)
+                {
+                    if (tile.GetCurrentFrame.Y == current.Y && tile.GetCurrentFrame.X < current.X)
+                    {
+                        closestTile = tile.GetCurrentFrame.X;
+                    }
+                }
+
+                pathLength = rand.Next(1, 5);
+
+                if (pathLength >= closestTile)
+                {
+                    pathLength = closestTile - 1;
+                }
+            }
+            else
+            {
+                pathLength = 4;
+            }
+
+            for (counter = 1; counter < pathLength; counter++)
+            {
+                pathList.Add(new MapSprite(
+                            Game.Content.Load<Texture2D>(@"images\path"),
+                            new Vector2(current.X, current.Y + (TileSize * counter)), new Point(50, 50), 10,
+                            new Point(current.X, current.Y + (TileSize * counter)), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25), false));
+            }
+        }
+
+        private void GoWest( Point current )
+        {
+
+        }
+
         /*
         protected void CheckPowerUpExpiration(GameTime gameTime)
         {
@@ -555,11 +636,11 @@ namespace TSAUMDHG
         {
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
                 SpriteSortMode.Deferred, SaveStateMode.None);
-            
+
             // Draw all sprites
             foreach (MapSprite m in mapList)
                 m.Draw(gameTime, spriteBatch);
-            
+
             //Draw the livesleft sprites
             //foreach (Sprite sprite in livesList)
             //    sprite.Draw(gameTime, spriteBatch);
@@ -570,18 +651,18 @@ namespace TSAUMDHG
             //tower.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
-/*
-        private void ResetSpawnTime()
-        {
-            nextSpawnTime = ((Game1)Game).rnd.Next(
-            enemySpawnMinMilliseconds,
-            enemySpawnMaxMilliseconds);
-        }
+        /*
+                private void ResetSpawnTime()
+                {
+                    nextSpawnTime = ((Game1)Game).rnd.Next(
+                    enemySpawnMinMilliseconds,
+                    enemySpawnMaxMilliseconds);
+                }
 
-*/
+        */
         /*
         private void SpawnEnemy()
         {
@@ -708,31 +789,31 @@ namespace TSAUMDHG
         {
             return player.GetPosition;
         }
-/*
-        protected void AdjustSpawnTimes(GameTime gameTime)
-        {
-            // If the spawn max time is > 500 milliseconds
-            // decrease the spawn time if it is time to do
-            // so based on the spawn-timer variables
-            if (enemySpawnMaxMilliseconds > 500)
-            {
-                timeSinceLastSpawnTimeChange += gameTime.ElapsedGameTime.Milliseconds;
-                if (timeSinceLastSpawnTimeChange > nextSpawnTimeChange)
+        /*
+                protected void AdjustSpawnTimes(GameTime gameTime)
                 {
-                    timeSinceLastSpawnTimeChange -= nextSpawnTimeChange;
-                    if (enemySpawnMaxMilliseconds > 1000)
+                    // If the spawn max time is > 500 milliseconds
+                    // decrease the spawn time if it is time to do
+                    // so based on the spawn-timer variables
+                    if (enemySpawnMaxMilliseconds > 500)
                     {
-                        enemySpawnMaxMilliseconds -= 100;
-                        enemySpawnMinMilliseconds -= 100;
-                    }
-                    else
-                    {
-                        enemySpawnMaxMilliseconds -= 10;
-                        enemySpawnMinMilliseconds -= 10;
+                        timeSinceLastSpawnTimeChange += gameTime.ElapsedGameTime.Milliseconds;
+                        if (timeSinceLastSpawnTimeChange > nextSpawnTimeChange)
+                        {
+                            timeSinceLastSpawnTimeChange -= nextSpawnTimeChange;
+                            if (enemySpawnMaxMilliseconds > 1000)
+                            {
+                                enemySpawnMaxMilliseconds -= 100;
+                                enemySpawnMinMilliseconds -= 100;
+                            }
+                            else
+                            {
+                                enemySpawnMaxMilliseconds -= 10;
+                                enemySpawnMinMilliseconds -= 10;
+                            }
+                        }
                     }
                 }
-            }
-        }
- */
+         */
     }
 }
