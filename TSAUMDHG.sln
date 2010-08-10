@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSAUMDHG", "TSAUMDHG.csproj", "{EC8BA3AB-A1BE-4BDB-BDD0-F7C9FDFABCF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC8BA3AB-A1BE-4BDB-BDD0-F7C9FDFABCF4}.Debug|x86.ActiveCfg = Debug|x86
+		{EC8BA3AB-A1BE-4BDB-BDD0-F7C9FDFABCF4}.Debug|x86.Build.0 = Debug|x86
+		{EC8BA3AB-A1BE-4BDB-BDD0-F7C9FDFABCF4}.Release|x86.ActiveCfg = Release|x86
+		{EC8BA3AB-A1BE-4BDB-BDD0-F7C9FDFABCF4}.Release|x86.Build.0 = Release|x86
+		{01E6D38F-1513-4E6E-9B2D-9B11EF7D8295}.Debug|x86.ActiveCfg = Debug|x86
+		{01E6D38F-1513-4E6E-9B2D-9B11EF7D8295}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

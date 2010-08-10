@@ -21,15 +21,45 @@ namespace TSAUMDHG
     {
         SpriteBatch spriteBatch;
         UserControlledSprite player;
-        TowerSprite tower;
-        List<UserControlledSprite> spriteList = new List<UserControlledSprite>();
+        UnitSprite unit;
+        List<UnitSprite> spriteList = new List<UnitSprite>();
         List<MapSprite> mapList = new List<MapSprite>();
         List<MapSprite> pathList = new List<MapSprite>();
-        const float NintyDegrees = (float)(Math.PI * 90 / 180.0);
-        const float OneEightyDegrees = (float)(Math.PI);
-        const float TwoSeventyDegrees = (float)(Math.PI * 270 / 180.0);
-        Point MinPoint = new Point(Int32.MinValue, Int32.MinValue);
+        List<UnitSprite> targetList = new List<UnitSprite>();
+        List<ProjectileSprite> projectileList = new List<ProjectileSprite>();
+        Dictionary<string, Texture2D> projectileTextureList = new Dictionary<string, Texture2D>();
+        List<ProjectileSprite> removeProjectileList = new List<ProjectileSprite>();
+        List<TowerSprite> towerList = new List<TowerSprite>();
+        Dictionary<string, Texture2D> towerTextureList = new Dictionary<string, Texture2D>();
+        Dictionary<string, SpriteFont> fontList = new Dictionary<string, SpriteFont>();
+        Dictionary<string, Texture2D> unitTextureList = new Dictionary<string, Texture2D>();
+        Dictionary<string, Texture2D> rangeTextureList = new Dictionary<string, Texture2D>();
+        Dictionary<string, TextSprite> textList = new Dictionary<string, TextSprite>();
+        List<TowerSprite> menuTowerList = new List<TowerSprite>();
+        Dictionary<string, Texture2D> healthTextureList = new Dictionary<string, Texture2D>();
+        BattleMenuSprite battleMenuSprite;
+        Texture2D filler;
 
+        const int TileSize = 50;
+        Point MinPoint = new Point(Int32.MinValue, Int32.MinValue);
+        Random rand = new Random();
+        MapUtilities mapUtil;
+        float unitRelease = 0.6f;
+        float releaseTime = 0;
+        int credits = 100;
+        int unitsMissed = 0;
+        int TextId = Int32.MinValue;
+
+        //Effect Test
+        Effect desaturateEffect;
+        Effect refractionEffect;
+        Texture2D waterfallTexture;
+
+        SoundEffect acidHit;
+        Song backgroundMusic;
+
+
+        HealthContainerSprite healthContainer;
         //Spawning variables
         /*
         int enemySpawnMinMilliseconds = 1000;
@@ -62,7 +92,7 @@ namespace TSAUMDHG
         public SpriteManager(Game game)
             : base(game)
         {
-            // TODO: Construct any child components here
+            mapUtil = new MapUtilities(game, TileSize);
         }
 
         /// <summary>
@@ -71,63 +101,10 @@ namespace TSAUMDHG
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-            for (int x = -100; x < ((Game1)Game).Window.ClientBounds.Width + 100; x += 50)
-            {
-                for (int y = -100; y < ((Game1)Game).Window.ClientBounds.Height + 100; y += 50)
-                {
-                    if (((x / 50) == 3 && (y / 50) < 12) ||
-                        ((x / 50) == 18 && (y / 50) < 12 && (y / 50) > 7) ||
-                        ((x / 50) == 6 && (y / 50) < 7 && (y / 50) > 1) ||
-                        ((x / 50) == 21 && (y / 50) > 1))
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\path"),
-                            new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25)));
-                    }
-                    else if (((y / 50) == 12 && (x / 50) > 3 && (x / 50) < 18) ||
-                             ((y / 50) == 7 && (x / 50) > 6 && (x / 50) < 18) ||
-                             ((y / 50) == 1 && (x / 50) > 6 && (x / 50) < 21))
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\path"),
-                            new Vector2(x + 1, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75)));
-                    }
-                    else if (((x / 50) == 3 && (y / 50) == 12) ||
-                             ((x / 50) == 6 && (y / 50) == 7))
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\bend"),
-                            new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, 0f, new Vector2(25, 25)));
-                    }
-                    else if ((x / 50) == 18 && (y / 50) == 12)
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\bend"),
-                            new Vector2(x, y + 1), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, TwoSeventyDegrees, new Vector2(75, 25)));
-                    }
-                    else if (((x / 50) == 18 && (y / 50) == 7) ||
-                             ((x / 50) == 21 && (y / 50) == 1))
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\bend"),
-                            new Vector2(x + 1, y + 1), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees * 2, new Vector2(75, 75)));
-                    }
-                    else if ((x / 50) == 6 && (y / 50) == 1)
-                    {
-                        pathList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\bend"),
-                            new Vector2(x + 1, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 1, NintyDegrees, new Vector2(25, 75)));
-                    }
-                }
-            }
-            
+            MediaPlayer.Stop();
+            //backgroundMusic = Game.Content.Load<Song>(@"music\bg");
+            //MediaPlayer.Play(backgroundMusic);
+
             base.Initialize();
 
             //ResetSpawnTime();
@@ -135,45 +112,50 @@ namespace TSAUMDHG
 
         protected override void LoadContent()
         {
+            mapUtil.LoadMapTextures();
+            pathList = mapUtil.GeneratePath();
+            mapList = mapUtil.GenerateMap(pathList);
+            acidHit = Game.Content.Load<SoundEffect>(@"audio\splat");
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            MapSprite currentPathSprite = null;
-            
-            for (int x = -100; x < ((Game1)Game).Window.ClientBounds.Width + 100; x += 50)
-            {
-                for (int y = -100; y < ((Game1)Game).Window.ClientBounds.Height + 100; y += 50)
-                {
-                    currentPathSprite = pathList.Find(
-                        delegate(MapSprite path)
-                        {
-                            return (path.GetCurrentFrame.X == x && path.GetCurrentFrame.Y == y);
-                        });
-                    if (currentPathSprite != null)
-                    {
-                        mapList.Add(currentPathSprite);
-                    }
-                    else
-                    {
-                        mapList.Add(new MapSprite(
-                            Game.Content.Load<Texture2D>(@"images\grass"),
-                            new Vector2(x, y), new Point(50, 50), 10,
-                            new Point(x, y), new Point(1, 1), Vector2.Zero, 0, 0f, new Vector2(25, 25)));
-                    }
-                }
-            }
+            Point startTile = new Point(Int32.MinValue, Int32.MinValue);
+            desaturateEffect = Game.Content.Load<Effect>(@"effects\desaturate");
+            refractionEffect = Game.Content.Load<Effect>(@"effects\refraction");
+            waterfallTexture = Game.Content.Load<Texture2D>(@"effects\waterfall");
+
+            projectileTextureList.Add("acid_bomb_projectile", Game.Content.Load<Texture2D>(@"images\acid_bomb_projectile"));
+            towerTextureList.Add("tower", Game.Content.Load<Texture2D>(@"images\tower"));
+            towerTextureList.Add("tower_", Game.Content.Load<Texture2D>(@"images\tower_"));
+            fontList.Add("arial", Game.Content.Load<SpriteFont>(@"font\arial"));
+            unitTextureList.Add("unit", Game.Content.Load<Texture2D>(@"Images/unit"));
+            rangeTextureList.Add("circle", Game.Content.Load<Texture2D>(@"images/rangeCircle"));
+            healthTextureList.Add("container", Game.Content.Load<Texture2D>(@"images/healthContainer"));
+            healthTextureList.Add("bar", Game.Content.Load<Texture2D>(@"images/menuBackground"));
+            filler = Game.Content.Load<Texture2D>(@"images\menuBackground");
+
+            menuTowerList.Add(new TowerSprite(towerTextureList["tower"], new Vector2(Game.Window.ClientBounds.Width * 0.2f, -75),
+                            new Point(5, 6), new Point(0, 0), new Point(10, 0), new Vector2(6, 6), 300, 0.4f, 300f, 400f, 10,
+                            Color.White, projectileTextureList["acid_bomb_projectile"], rangeTextureList["circle"], 35));
+
+            menuTowerList.Add(new TowerSprite(towerTextureList["tower_"], new Vector2(Game.Window.ClientBounds.Width * 0.5f, -75),
+                            new Point(-2, -5), new Point(0, 0), new Point(10, 0), new Vector2(6, 6), 300, 0.3f, 75f, 1000f, 10,
+                            Color.White, projectileTextureList["acid_bomb_projectile"], rangeTextureList["circle"], 100));
+
+            menuTowerList.Add(new TowerSprite(towerTextureList["tower"], new Vector2(Game.Window.ClientBounds.Width * 0.8f, -75),
+                            new Point(23, 20), new Point(0, 0), new Point(10, 0), new Vector2(6, 6), 300, 0.65f, 600f, 200f, 10,
+                            Color.Green, projectileTextureList["acid_bomb_projectile"], rangeTextureList["circle"], 15));
+
+            battleMenuSprite = new BattleMenuSprite(filler, new Vector2(0, -150),
+                new Vector2(0, 0), new Point(Game.Window.ClientBounds.Width, 150), new Point(0, 0), new Point(0, 0),
+                new Vector2(0, 5), new Point((Game.Window.ClientBounds.Width / filler.Width), 150 / filler.Height), 0f, new Color(0, 0, 0, 100), menuTowerList, 
+                Game.Content.Load<Texture2D>(@"Images/cursor"), fontList["arial"]);
+
             player = new UserControlledSprite(
-                Game.Content.Load<Texture2D>(@"Images/unit"),
-                new Vector2(pathList[05].GetCurrentFrame.X, pathList[5].GetCurrentFrame.Y),
-                new Point(177, 139), 10, new Point(0, 0),
-                new Point(1, 2), new Vector2(6, 6), 120, new Vector2(52, 69));
-            player.ModifyScale(0.35f);
-            spriteList.Add(player);
-            
-            tower = new TowerSprite(
-                Game.Content.Load<Texture2D>(@"Images/tower"),
-                new Vector2(50 * 4, 50 * 6),
-                new Point(144, 144), 10, new Point(0, 0),
-                new Point(9, 0), new Vector2(6, 6), 1200, 300f, 30f, 10, new Vector2(72, 72));
-            tower.ModifyScale(0.4f);
+                Game.Content.Load<Texture2D>(@"Images/cursor"),
+                new Vector2(((Game1)Game).Window.ClientBounds.Width / 2, ((Game1)Game).Window.ClientBounds.Height / 2),
+                new Point(0, 5), new Point(0, 0), new Point(0, 0), new Vector2(7, 7), 12, 1f, Color.White, 255);
+
+            textList.Add("credits", new TextSprite(fontList["arial"], new Vector2(10, 10), new Vector2(0, 0), 0, "Credits: " + credits, Color.Beige));
+            textList.Add("escaped", new TextSprite(fontList["arial"], new Vector2(Game.Window.ClientBounds.Width - 150, 10), new Vector2(0, 0), 0, "Escaped: " + unitsMissed, Color.Beige));
 
             base.LoadContent();
         }
@@ -197,6 +179,8 @@ namespace TSAUMDHG
             */
             UpdateSprites(gameTime);
 
+            BuildTower();
+
             //AdjustSpawnTimes(gameTime);
 
             //CheckPowerUpExpiration(gameTime);
@@ -204,12 +188,190 @@ namespace TSAUMDHG
             base.Update(gameTime);
         }
 
+        public void BuildTower()
+        {
+            bool towerIntersect = false;
+            bool mapIntersect = false;
+
+            foreach (TowerSprite t in towerList)
+            {
+                if (player.collisionRect.Intersects(t.collisionRect))
+                {
+                    towerIntersect = true;
+                    break;
+                }
+            }
+
+            foreach (MapSprite m in pathList)
+            {
+                if (player.collisionRect.Intersects(m.collisionRect))
+                {
+                    mapIntersect = true;
+                    break;
+                }
+            }
+
+            if (!towerIntersect && !mapIntersect && battleMenuSprite.activeSelection >= 0)
+            {
+                player.Activate();
+                if (player.RequestTower() && (!battleMenuSprite.IsExtended() || !battleMenuSprite.IsScrolling()) &&
+                    menuTowerList[battleMenuSprite.GetActiveSelection()].credits <= credits)
+                {
+                    TowerSprite tower = new TowerSprite(
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].textureImage,
+                            new Vector2(player.GetPosition.X, player.GetPosition.Y),
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].GetCollisionOffset(),
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].GetCurrentFrame,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].GetSheetSize,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].GetSpeed(),
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].range,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].GetScale(),
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].reloadRate,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].numberOfTurrets,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].color,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].projectileTexture,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].rangeTexture,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].damage,
+                            menuTowerList[battleMenuSprite.GetActiveSelection()].credits);
+
+                    towerList.Add(tower);
+
+                    credits -= 100;
+                }
+            }
+            else if (towerIntersect && battleMenuSprite.activeSelection < 0)
+            {
+                player.Activate();
+            }
+            else
+            {
+                player.Deactivate();
+            }
+        }
+
         protected void UpdateSprites(GameTime gameTime)
         {
-            // Update player
-            player.Update(gameTime, Game.Window.ClientBounds, pathList);
+            double output = 0;
+            Double.TryParse((gameTime.ElapsedGameTime.TotalSeconds).ToString(), out output);
+            ProjectileSprite projectile;
 
-            tower.Update(gameTime, Game.Window.ClientBounds, spriteList);
+            if (releaseTime > unitRelease)
+            {
+                float scale = (float)rand.NextDouble();
+
+                scale = scale / 2;
+                if (scale < 0.25f)
+                {
+                    scale = 0.25f;
+                }
+
+                int speed = (int)Math.Round(1.2 / scale);
+
+                unit = new UnitSprite(
+                    unitTextureList["unit"],
+                    new Vector2(pathList[0].GetPosition.X, pathList[0].GetPosition.Y),
+                    new Point((int)Math.Floor(177 * .35f), (int)Math.Floor(139 * .35f)), Point.Zero, new Point(0, 0),
+                    new Point(1, 2), new Vector2(speed, speed), 120, new Vector2(177 / 2, 139 / 2),
+                    new Color((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble()),
+                    scale, (int)Math.Round(400 * scale), (int)Math.Round(50 * scale), rand.Next(), new Point(0, (int)Math.Round((double)mapList[0].GetFrameSize.Y / 4) * -1),
+                    healthTextureList);
+                spriteList.Add(unit);
+
+                releaseTime = 0f;
+            }
+            else
+            {
+                releaseTime += (float)output;
+            }
+
+            for (int counter = 0; counter < spriteList.Count; counter++)
+            {
+                spriteList[counter].Update(gameTime, Game.Window.ClientBounds, pathList);
+                if (spriteList[counter].IsDone())
+                {
+                    unitsMissed += 1;
+                    spriteList.Remove(spriteList[counter]);
+                }
+            }
+
+            foreach (TowerSprite t in towerList)
+            {
+                projectile = t.Update(gameTime, Game.Window.ClientBounds, spriteList, pathList);
+
+                if (projectile != null)
+                {
+                    projectileList.Add(projectile);
+                }
+            }
+            foreach (ProjectileSprite p in projectileList)
+            {
+                p.Update(gameTime);
+                if (p.GetPosition.Equals(p.target))
+                {
+                    if (p.GetTargetIndex() < spriteList.Count &&
+                        p.GetTargetId() == spriteList[p.GetTargetIndex()].GetId())
+                    {
+                        spriteList[p.GetTargetIndex()].Hit(p.GetDamage());
+                        if (spriteList[p.GetTargetIndex()].IsDead())
+                        {
+                            credits += spriteList[p.GetTargetIndex()].points;
+                            TextId++;
+                            textList.Add(TextId.ToString(), new TextSprite(fontList["arial"], spriteList[p.GetTargetIndex()].GetPosition, new Vector2(0, -2), 10, spriteList[p.GetTargetIndex()].points.ToString(), Color.White));
+                            spriteList.Remove(spriteList[p.GetTargetIndex()]);
+                        }
+                    }
+                    
+                    removeProjectileList.Add(p);
+                }
+            }
+
+            foreach (ProjectileSprite p in removeProjectileList)
+            {
+                acidHit.Play();
+                projectileList.Remove(p);
+            }
+
+            removeProjectileList.Clear();
+
+            textList["credits"].SetText("Credits: " + credits);
+            textList["escaped"].SetText("Escaped: " + unitsMissed);
+
+            battleMenuSprite.Update(gameTime, Game.Window.ClientBounds);
+
+            // Update player
+            if (!battleMenuSprite.IsExtended() && !battleMenuSprite.IsScrolling())
+            {
+                if (battleMenuSprite.activeSelection >= 0)
+                {
+                    TowerSprite tower = battleMenuSprite.towerList[battleMenuSprite.activeSelection];
+                    player.frameSize = tower.frameSize;
+                    if (player.rangeSprite == null || !player.rangeSprite.IsSameRange(tower.range))
+                    {
+                        player.SetRangeSprite(rangeTextureList["circle"], tower.range);
+                        player.collisionOffset = tower.collisionOffset;
+                    }
+                }
+                else
+                {
+                    player.ResetFrameSize();
+                }
+                player.Update(gameTime, Game.Window.ClientBounds, pathList);
+            }
+            else if (battleMenuSprite.IsExtended() && !battleMenuSprite.IsScrolling() && battleMenuSprite.activeSelectionCursor.RequestTower())
+            {
+                battleMenuSprite.activeSelection = battleMenuSprite.selectedTower;
+            }
+
+            for (int counter = 0; counter < textList.Count; counter++)
+            {
+                textList.ElementAt(counter).Value.Update(gameTime, Game.Window.ClientBounds);
+                
+                if (textList.ElementAt(counter).Value.IsGone())
+                {
+                textList.Remove(textList.ElementAt(counter).Key);
+                }
+            }
+                
 
             // Update all non-player sprites
             /*for (int i = 0; i < spriteList.Count; ++i)
@@ -269,9 +431,10 @@ namespace TSAUMDHG
             */
             //Update the lives left sprites
             //foreach (Sprite sprite in livesList)
-                //sprite.Update(gameTime, Game.Window.ClientBounds);
+            //sprite.Update(gameTime, Game.Window.ClientBounds);
         }
-/*
+
+        /*
         protected void CheckPowerUpExpiration(GameTime gameTime)
         {
             // Is a power-up active?
@@ -293,34 +456,81 @@ namespace TSAUMDHG
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                SpriteSortMode.Deferred, SaveStateMode.None);
-            
+                SpriteSortMode.BackToFront, SaveStateMode.None);
+
             // Draw all sprites
-            foreach (MapSprite m in mapList)
-                m.Draw(gameTime, spriteBatch);
             
-            //Draw the livesleft sprites
-            //foreach (Sprite sprite in livesList)
-            //    sprite.Draw(gameTime, spriteBatch);
+            foreach (MapSprite m in mapList)
+            {
+                m.Draw(gameTime, spriteBatch);
+            }
 
             // Draw the player
             player.Draw(gameTime, spriteBatch);
 
-            tower.Draw(gameTime, spriteBatch);
+            foreach (UnitSprite u in spriteList)
+                u.Draw(gameTime, spriteBatch);
+
+            foreach (TowerSprite t in towerList)
+                t.Draw(gameTime, spriteBatch);
+
+            foreach (ProjectileSprite p in projectileList)
+                p.Draw(gameTime, spriteBatch);
+
+            for (int counter = 0; counter < textList.Count; counter++ )
+                textList.ElementAt(counter).Value.Draw(spriteBatch);
+
+            battleMenuSprite.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
-            
+
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
+                SpriteSortMode.Immediate, SaveStateMode.None);
+
+            // Set the displacement texture.
+            base.Game.GraphicsDevice.Textures[1] = waterfallTexture;
+
+            desaturateEffect.Begin();
+            desaturateEffect.CurrentTechnique.Passes[0].Begin();
+            // Draw the sprite.
+            //spriteBatch.Draw(catTexture,
+            //                 MoveInCircle(gameTime, catTexture, 1),
+            //                 Color.White);
+
+            // End the sprite batch, then end our custom effect.
+            //spriteBatch.End();
+
+            //refractionEffect.CurrentTechnique.Passes[0].End();
+            //refractionEffect.End();
+
+            TowerSprite towerTemp = new TowerSprite(towerTextureList["tower"], player.GetPosition,
+                            new Point(5, 6), new Point(0, 0), new Point(10, 0), new Vector2(6, 6), 300, 0.4f, 300f, 400f, 10,
+                            Color.White, projectileTextureList["acid_bomb_projectile"], rangeTextureList["circle"], 35);
+            if (!player.active)
+            {
+                towerTemp.color.A = 0;
+            }
+            else
+            {
+                towerTemp.color.A = 255/3;
+            }
+            towerTemp.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
+
+            desaturateEffect.CurrentTechnique.Passes[0].End();
+            desaturateEffect.End();          
+
             base.Draw(gameTime);
         }
-/*
-        private void ResetSpawnTime()
-        {
-            nextSpawnTime = ((Game1)Game).rnd.Next(
-            enemySpawnMinMilliseconds,
-            enemySpawnMaxMilliseconds);
-        }
+        /*
+                private void ResetSpawnTime()
+                {
+                    nextSpawnTime = ((Game1)Game).rnd.Next(
+                    enemySpawnMinMilliseconds,
+                    enemySpawnMaxMilliseconds);
+                }
 
-*/
+        */
         /*
         private void SpawnEnemy()
         {
@@ -447,31 +657,31 @@ namespace TSAUMDHG
         {
             return player.GetPosition;
         }
-/*
-        protected void AdjustSpawnTimes(GameTime gameTime)
-        {
-            // If the spawn max time is > 500 milliseconds
-            // decrease the spawn time if it is time to do
-            // so based on the spawn-timer variables
-            if (enemySpawnMaxMilliseconds > 500)
-            {
-                timeSinceLastSpawnTimeChange += gameTime.ElapsedGameTime.Milliseconds;
-                if (timeSinceLastSpawnTimeChange > nextSpawnTimeChange)
+        /*
+                protected void AdjustSpawnTimes(GameTime gameTime)
                 {
-                    timeSinceLastSpawnTimeChange -= nextSpawnTimeChange;
-                    if (enemySpawnMaxMilliseconds > 1000)
+                    // If the spawn max time is > 500 milliseconds
+                    // decrease the spawn time if it is time to do
+                    // so based on the spawn-timer variables
+                    if (enemySpawnMaxMilliseconds > 500)
                     {
-                        enemySpawnMaxMilliseconds -= 100;
-                        enemySpawnMinMilliseconds -= 100;
-                    }
-                    else
-                    {
-                        enemySpawnMaxMilliseconds -= 10;
-                        enemySpawnMinMilliseconds -= 10;
+                        timeSinceLastSpawnTimeChange += gameTime.ElapsedGameTime.Milliseconds;
+                        if (timeSinceLastSpawnTimeChange > nextSpawnTimeChange)
+                        {
+                            timeSinceLastSpawnTimeChange -= nextSpawnTimeChange;
+                            if (enemySpawnMaxMilliseconds > 1000)
+                            {
+                                enemySpawnMaxMilliseconds -= 100;
+                                enemySpawnMinMilliseconds -= 100;
+                            }
+                            else
+                            {
+                                enemySpawnMaxMilliseconds -= 10;
+                                enemySpawnMinMilliseconds -= 10;
+                            }
+                        }
                     }
                 }
-            }
-        }
- */
+         */
     }
 }

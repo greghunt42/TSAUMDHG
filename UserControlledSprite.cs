@@ -12,171 +12,184 @@ namespace TSAUMDHG
     {
         //Mouse movement
         //MouseState prevMouseState;
-        int timeSinceLastFrame = 0;
+        public int timeSinceLastFrame { get; set; }
+        public int colorFade { get; set; }
+        public int maxFade { get; private set; }
+        private int maxAlpha;
+        public RangeSprite rangeSprite { get; set; }
+        //public TowerSprite 
+        public bool active { get; private set; }
 
         public UserControlledSprite(Texture2D textureImage, Vector2 position,
-            Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, Vector2 origin)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame,
-            sheetSize, speed, null, 0, 0f, origin)
+            Point collisionOffset, Point currentFrame, Point sheetSize,
+            Vector2 speed, Color color, int maxFade)
+            : base(textureImage, position, Point.Zero, collisionOffset, currentFrame,
+            sheetSize, speed, null, 0, 1f, 0f, Vector2.Zero, color)
         {
+            base.frameSize = new Point((int)Math.Round((textureImage.Width / (base.sheetSize.X + 1)) * scale), (int)Math.Round((textureImage.Height / (base.sheetSize.Y + 1)) * scale));
+            base.origin = new Vector2(((textureImage.Width / (base.sheetSize.X + 1) / 2)), ((textureImage.Height / (base.sheetSize.Y + 1) / 2)));
+            rangeSprite = null;
+            active = false;
+
+            this.maxFade = maxFade;
+            this.colorFade = -8;
+
+            timeSinceLastFrame = 0;
         }
         public UserControlledSprite(Texture2D textureImage, Vector2 position,
-            Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, int millisecondsPerFrame, Vector2 origin)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame,
-            sheetSize, speed, millisecondsPerFrame, null, 0, 0f, origin)
+            Point collisionOffset, Point currentFrame, Point sheetSize,
+            Vector2 speed, int millisecondsPerFrame, float scale, Color color, int maxFade)
+            : base(textureImage, position, Point.Zero, collisionOffset, currentFrame,
+            sheetSize, speed, millisecondsPerFrame, null, 0, scale, 0f, Vector2.Zero, color)
         {
+            base.frameSize = new Point((int)Math.Round((textureImage.Width / (base.sheetSize.X + 1)) * scale), (int)Math.Round((textureImage.Height / (base.sheetSize.Y + 1)) * scale));
+            base.origin = new Vector2(((textureImage.Width / (base.sheetSize.X + 1) / 2)), ((textureImage.Height / (base.sheetSize.Y + 1) / 2)));
+            rangeSprite = null;
+            base.SetLayerDepth(0.0f);
+            active = false;
+
+            this.maxFade = maxFade;
+            this.colorFade = -8;
+
+            timeSinceLastFrame = 0;
         }
 
-        public override Vector2 direction
+        public override Rectangle collisionRect
         {
             get
             {
-                //Return direction based on input from mouse and gamepad
-                Vector2 inputDirection = Vector2.Zero;
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                    inputDirection.X -= 1;
-                if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                    inputDirection.X += 1;
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                    inputDirection.Y -= 1;
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                    inputDirection.Y += 1;
-
-                GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
-                if (gamepadState.ThumbSticks.Left.X != 0)
-                    inputDirection.X += gamepadState.ThumbSticks.Left.X;
-                if (gamepadState.ThumbSticks.Left.Y != 0)
-                    inputDirection.Y += gamepadState.ThumbSticks.Left.Y*-1;
-                return inputDirection * speed;
+                return new Rectangle(
+                (int)Math.Round(position.X + (collisionOffset.X * -1)),
+                (int)Math.Round(position.Y + (frameSize.Y / 2) + (collisionOffset.Y * -1)),
+                (int)Math.Round((double)(frameSize.X)),
+                (int)Math.Round((double)(frameSize.Y / 2)));
             }
         }
 
-        public void Update(GameTime gameTime, Rectangle clientBounds, List<MapSprite> pathList)
+        public void SetPosition(Vector2 newPosition)
+        {
+            this.position = newPosition;
+        }
+
+        public void Activate()
+        {
+            active = true;
+            color = Color.Lime;
+
+            if (rangeSprite != null)
+            {
+                rangeSprite.color = Color.Lime;
+            }
+        }
+
+        public void Deactivate()
+        {
+            active = false;
+            color = Color.DarkGray;
+
+            if (rangeSprite != null)
+            {
+                rangeSprite.color = Color.DarkGray;
+            }
+        }
+        public void ResetFrameSize()
+        {
+            base.frameSize = new Point((int)Math.Round((textureImage.Width / (base.sheetSize.X + 1)) * scale), (int)Math.Round((textureImage.Height / (base.sheetSize.Y + 1)) * scale));
+            ResetRangeSprite();
+        }
+
+        public override Vector2 GetDirection()
+        {
+            //Return direction based on input from mouse and gamepad
+            Vector2 inputDirection = Vector2.Zero;
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                inputDirection.X -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                inputDirection.X += 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                inputDirection.Y -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                inputDirection.Y += 1;
+
+            GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
+            if (gamepadState.ThumbSticks.Left.X != 0)
+                inputDirection.X += gamepadState.ThumbSticks.Left.X;
+            if (gamepadState.ThumbSticks.Left.Y != 0)
+                inputDirection.Y += gamepadState.ThumbSticks.Left.Y*-1;
+            return inputDirection * speed;
+        }
+
+        public bool RequestMenu()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.RightControl) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.RightTrigger))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool RequestTower()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Vector2 UpdatePosition(List<MapSprite> pathList)
         {
             MapSprite currentPathSprite = null;
             Vector2 newPosition = position;
             float offset = 0.0f;
-            bool pathFound = false;
 
-            //Remove all 
-            
-            /*Point north = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == (xPosFloor * 50) && point.Y == ((yPosFloor - 1) * 50);
-                    }
-                     */
-                    //return point.X == (xPosFloor * 50) && point.Y == (yPosFloor * 50);
-                    //return (point.X >= (xPosFloor * 50) && point.X <= (xPosCeiling * 50)) && point.Y == ((yPosFloor - 1) * 50);
-                //});
-
-            /*Point south = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosCeiling * 50) == ((Math.Floor(position.Y / 50) * 50) ))
-                    {
-                        return point.X == (xPosFloor * 50) && point.Y == ((yPosCeiling + 1) * 50);
-                    }
-                     */
-                    //return (point.X >= (xPosFloor * 50) && point.X <= (xPosCeiling * 50)) && point.Y == ((yPosFloor + 1) * 50);
-                //});
-
-            /*Point east = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosCeiling * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == ((xPosCeiling + 1) * 50) && point.Y == (yPosFloor * 50);
-                    }
-                     */
-                    //return point.X == ((xPosFloor + 1) * 50) && (point.Y >= (yPosFloor * 50) && point.Y <= (yPosCeiling * 50));
-                //});
-
-            /*Point west = pathList.Find(
-                delegate(Point point)
-                {
-                    /*
-                    if (((Math.Floor(position.X / 50) * 50)) == (xPosFloor * 50) && (yPosFloor * 50) == ((Math.Floor(position.Y / 50) * 50)))
-                    {
-                        return point.X == ((xPosFloor - 1) * 50) && point.Y == (yPosFloor * 50);
-                    }
-                     */
-                    //return point.X == ((xPosFloor - 1) * 50) && point.Y == (yPosFloor * 50);
-                //});
-            
-
-            // Move the sprite according to the direction property
-            //
-            //Commented out mouse support to force user to use keyboard
-            //
-            //// If the mouse moved, set the position of the sprite to the mouse position
-            //MouseState currMouseState = Mouse.GetState();
-
-            //if (currMouseState.X != prevMouseState.X ||
-            //currMouseState.Y != prevMouseState.Y)
-            //{
-            //    position = new Vector2(currMouseState.X, currMouseState.Y);
-            //}
-            //prevMouseState = currMouseState;
-
-            // If the sprite is off the screen, put it back in play
-            /*
-            if (position.X < 0)
-            {
-                position.X = 0;
-            }
-            if (position.Y < 0)
-            {
-                position.Y = 0;
-            }
-            if (position.X > clientBounds.Width - frameSize.X)
-            {
-                position.X = clientBounds.Width - frameSize.X;
-            }
-            if (position.Y > clientBounds.Height - frameSize.Y)
-            {
-                position.Y = clientBounds.Height - frameSize.Y;
-            }
-             */
-            /*if (north.Equals(new Point(0, 0)) && position.Y < (yPosCeiling) * 50)
-            {
-                position.Y = ((yPosCeiling) * 50);
-            }
-            if (south.Equals(new Point(0, 0)) && position.Y > (yPosFloor) * 50)
-            {
-                position.Y = ((yPosFloor) * 50);
-            }
-            if (east.Equals(new Point(0, 0)) && position.X > (xPosCeiling) * 50)
-            {
-                position.X = ((xPosCeiling) * 50);
-            }
-            if (west.Equals(new Point(0, 0)) && position.X < (xPosFloor) * 50)
-            {
-                position.X = ((xPosCeiling) * 50);
-            }*/
-
-            if (direction.X != 0.0f)
-            {
-                int i = 3;
-                i += 3;
-            }
-
-            if (direction.X < 0)
+            if (direction.X < 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
                 {
-                    offset = ((position.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
+                    offset = ((position.X + direction.X) - (pathList[index].GetPosition.X /*+ pathList[index].GetFrameSize.X*/));
 
-                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) - pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
-                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
+                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) - pathList[index].GetFrameSize.X) == pathList[index].GetPosition.X &&
+                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetPosition.Y)
+                    {
+                        currentPathSprite = pathList[index];
+                    }
+                }
+
+                if (position.Y % pathList[0].GetFrameSize.Y == 0)
+                {
+
+                }
+                if (currentPathSprite != null)
+                {
+                    newPosition.X += direction.X;
+                }
+                else
+                {
+                    offset = position.X % pathList[0].GetFrameSize.X;
+
+                    if (offset > Math.Abs(direction.X))
+                    {
+                        newPosition.X += direction.X;
+                    }
+                    else
+                    {
+                        newPosition.X -= (position.X % pathList[0].GetFrameSize.X);
+                    }
+
+                }
+            }
+
+            if (direction.X > 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
+            {
+                currentPathSprite = null;
+                for (int index = 0; index < pathList.Count; index++)
+                {
+                    offset = ((position.X + pathList[index].GetFrameSize.X + direction.X) - (pathList[index].GetPosition.X /*+ pathList[index].GetFrameSize.X*/));
+
+                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) + pathList[index].GetFrameSize.X) == pathList[index].GetPosition.X &&
+                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetPosition.Y)
                     {
                         currentPathSprite = pathList[index];
                     }
@@ -202,47 +215,13 @@ namespace TSAUMDHG
                 }
             }
 
-            if (direction.X > 0)
+            if (direction.Y < 0 && position.X % pathList[0].GetFrameSize.X == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
                 {
-                    offset = ((position.X + pathList[index].GetFrameSize.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
-                    
-                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) + pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
-                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
-                    {
-                        currentPathSprite = pathList[index];
-                    }
-                }
-
-                if (currentPathSprite != null)
-                {
-                    newPosition.X += direction.X;
-                }
-                else
-                {
-                    offset = position.X % pathList[0].GetFrameSize.X;
-
-                    if (offset > Math.Abs(direction.X))
-                    {
-                        newPosition.X += direction.X;
-                    }
-                    else
-                    {
-                        newPosition.X += (position.X % pathList[0].GetFrameSize.X);
-                    }
-
-                }
-            }
-
-            if (direction.Y < 0)
-            {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
-                {
-                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) - pathList[index].GetFrameSize.Y) == pathList[index].GetCurrentFrame.Y &&
-                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetCurrentFrame.X)
+                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) - pathList[index].GetFrameSize.Y) == pathList[index].GetPosition.Y &&
+                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetPosition.X)
                     {
                         currentPathSprite = pathList[index];
                     }
@@ -268,13 +247,13 @@ namespace TSAUMDHG
                 }
             }
 
-            if (direction.Y > 0)
+            if (direction.Y > 0 && position.X % pathList[0].GetFrameSize.X == 0)
             {
                 currentPathSprite = null;
                 for (int index = 0; index < pathList.Count; index++)
                 {
-                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) + pathList[index].GetFrameSize.Y) == pathList[index].GetCurrentFrame.Y &&
-                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetCurrentFrame.X)
+                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) + pathList[index].GetFrameSize.Y) == pathList[index].GetPosition.Y &&
+                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetPosition.X)
                     {
                         currentPathSprite = pathList[index];
                     }
@@ -286,7 +265,9 @@ namespace TSAUMDHG
                 }
                 else
                 {
-                    offset = position.Y % pathList[0].GetFrameSize.Y;
+                    offset = (position.Y) % pathList[0].GetFrameSize.Y;
+
+
 
                     if (offset > Math.Abs(direction.Y))
                     {
@@ -294,52 +275,104 @@ namespace TSAUMDHG
                     }
                     else
                     {
-                        newPosition.Y += (position.Y % pathList[0].GetFrameSize.Y);
+                        newPosition.Y -= offset;
                     }
-                    
+
                 }
             }
 
-            position = newPosition;
-
-            timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-            if((timeSinceLastFrame > base.GetMillisecondsPerFrame) &&
-               (direction.X != 0 || direction.Y != 0))
-            {
-                timeSinceLastFrame = 0;
-                if (Math.Abs(direction.X) > Math.Abs(direction.Y))
-                {
-                    SetSpriteEffect(SpriteEffects.None);
-                    if (direction.X < 0)
-                    {
-                        SetSpriteEffect(SpriteEffects.FlipHorizontally);
-                    }
-
-                    currentFrame.X++;
-                    currentFrame.Y = 2;
-                    if (currentFrame.X > GetSheetSize.X)
-                    {
-                        currentFrame.X = 0;
-                    }
-                }
-                else
-                {
-                    if (direction.Y < 0)
-                    {
-                        currentFrame.Y = 0;
-                    }
-                    else
-                    {
-                        currentFrame.Y = 1;
-                    }
-                    currentFrame.X++;
-                    if(currentFrame.X > GetSheetSize.X)
-                    {
-                        currentFrame.X = 0;
-                    }
-                }
-            }
-            //base.Update(gameTime, clientBounds);
+            return newPosition;
         }
+
+        public void UpdateFade(GameTime gameTime)
+        {
+            if (maxFade != 255)
+            {
+                timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+
+                if (timeSinceLastFrame > millisecondsPerFrame)
+                {
+                    if (color.R + colorFade > 255)
+                    {
+                        colorFade *= -1;
+                        color.R = (byte)(255);
+                        color.G = (byte)(255);
+                        color.B = (byte)(255);
+                    }
+
+                    if (color.R <= maxFade)
+                    {
+                        colorFade *= -1;
+                        color.R = (byte)(maxFade);
+                        color.G = (byte)(maxFade);
+                        color.B = (byte)(maxFade);
+                    }
+                    color.R += (byte)(colorFade);
+                    color.G += (byte)(colorFade);
+                    color.B += (byte)(colorFade);
+
+                    timeSinceLastFrame = 0;
+                }
+            }
+        }
+
+        public void Update(GameTime gameTime, Rectangle clientBounds, List<MapSprite> pathList)
+        {
+            //position = UpdatePosition(pathList);
+            Vector2 direction = GetDirection();
+
+            position += direction;
+
+            if(direction.X <= 0 && position.X - (frameSize.X / 2) <= 0)
+            {
+                position.X = frameSize.X / 2;
+            }
+            else if(direction.X > 0 && (position.X + (frameSize.X / 2)) > clientBounds.Width)
+            {
+                position.X = clientBounds.Width - (frameSize.X / 2);
+            }
+
+            if (direction.Y <= 0 && position.Y - (frameSize.Y / 2) <= 0)
+            {
+                position.Y = (frameSize.Y / 2);
+            }
+            else if (direction.Y > 0 && (position.Y + (frameSize.Y / 2)) > clientBounds.Height)
+            {
+                position.Y = clientBounds.Height - (frameSize.Y / 2);
+            }
+
+            if (rangeSprite != null)
+            {
+                rangeSprite.Update(gameTime, clientBounds, position);
+            }
+
+        }
+
+        public void ResetRangeSprite()
+        {
+            rangeSprite = null;
+        }
+
+        public void SetRangeSprite(Texture2D rangeTexture, float range)
+        {
+            maxAlpha = 200;
+            rangeSprite = new RangeSprite(rangeTexture, this.position, new Point(0, 0), new Point(0, 0),
+                new Vector2(0, 0), 0, 1f, new Color((byte)0,(byte)255,(byte)0,(byte)maxAlpha), 2);
+            rangeSprite.SetScale(range / ((rangeTexture.Height / (rangeSprite.GetSheetSize.X + 1)) / 2));
+            rangeSprite.frameSize = new Point((int)Math.Round(rangeSprite.frameSize.X * rangeSprite.GetScale()),
+                                              (int)Math.Round(rangeSprite.frameSize.Y * rangeSprite.GetScale()));
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            //Draw the sprite
+            if (rangeSprite != null)
+            {
+                rangeSprite.Draw(gameTime, spriteBatch);
+            }
+            base.Draw(gameTime, spriteBatch);
+
+        }
+
     }
 }

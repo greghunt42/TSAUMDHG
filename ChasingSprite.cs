@@ -4,18 +4,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TSAUMDHG
 {
-    class ChasingSprite : Sprite
-    {
+    //class ChasingSprite : Sprite
+    //{
         // Save a reference to the sprite manager to
         // use to get the player position
-        SpriteManager spriteManager;
-
+      //  SpriteManager spriteManager;
+/*
         public ChasingSprite(Texture2D textureImage, Vector2 position,
             Point frameSize, int collisionOffset, Point currentFrame,
             Point sheetSize, Vector2 speed, string collisionCueName,
-            SpriteManager spriteManager, int scoreValue, Vector2 origin)
+            SpriteManager spriteManager, int scoreValue, Vector2 origin, Color color)
             : base(textureImage, position, frameSize, collisionOffset,
-            currentFrame, sheetSize, speed, collisionCueName, scoreValue, 0f, origin)
+            currentFrame, sheetSize, speed, collisionCueName, scoreValue, 0f, origin, color)
         {
             this.spriteManager = spriteManager;
         }
@@ -23,17 +23,17 @@ namespace TSAUMDHG
             Point frameSize, int collisionOffset, Point currentFrame,
             Point sheetSize, Vector2 speed, int millisecondsPerFrame,
             string collisionCueName, SpriteManager spriteManager,
-            int scoreValue, Vector2 origin)
+            int scoreValue, Vector2 origin, Color color)
             : base(textureImage, position, frameSize, collisionOffset,
             currentFrame, sheetSize, speed, millisecondsPerFrame,
-            collisionCueName, scoreValue, 0f, origin)
+            collisionCueName, scoreValue, 0f, 0f, origin, color)
         {
             this.spriteManager = spriteManager;
         }
 
-        public override Vector2 direction
+        public override Vector2 GetDirection()
         {
-            get { return speed; }
+            return speed;
         }
 
         public override void Update(GameTime gameTime, Rectangle clientBounds)
@@ -64,6 +64,6 @@ namespace TSAUMDHG
             }
             
             base.Update(gameTime, clientBounds);
-        }
-    }
+        }*/
+    //}
 }

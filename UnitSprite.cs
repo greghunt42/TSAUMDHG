@@ -13,177 +13,168 @@ namespace TSAUMDHG
         //Mouse movement
         //MouseState prevMouseState;
         int timeSinceLastFrame = 0;
-        Point lastTile = new Point(Int32.MinValue, Int32.MinValue);
+        int lastTile = 0;
+        int maxHealth;
+        int currentHealth;
+        public int points { get; set; }
+        bool isDone = false;
+        int id;
+        Point unitOffset;
+        Dictionary<string, Texture2D> healthTextureList;
+        HealthBarSprite healthBar;
+        HealthContainerSprite healthContainer;
+        int frameshift;
+        bool isHit;
+
 
         public UnitSprite(Texture2D textureImage, Vector2 position,
-            Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, Vector2 origin, Point startTile)
+            Point frameSize, Point collisionOffset, Point currentFrame, Point sheetSize,
+            Vector2 speed, int millisecondsPerFrame, Vector2 origin, Color color, float scale, int maxHealth, int points,
+            int id, Point unitOffset, Dictionary<string, Texture2D> healthTextureList)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame,
-            sheetSize, speed, null, 0, 0f, origin)
+            sheetSize, speed, millisecondsPerFrame, null, 0, scale, 0f, origin, color)
         {
-            this.lastTile = startTile;
-        }
-        public UnitSprite(Texture2D textureImage, Vector2 position,
-            Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 speed, int millisecondsPerFrame, Vector2 origin, Point startTile)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame,
-            sheetSize, speed, millisecondsPerFrame, null, 0, 0f, origin)
-        {
-            this.lastTile = startTile;
+            this.maxHealth = maxHealth;
+            currentHealth = maxHealth;
+            this.id = id;
+            this.unitOffset = unitOffset;
+            this.healthTextureList = healthTextureList;
+            isHit = false;
+            this.points = points;
+            base.frameSize = new Point((int)Math.Round((textureImage.Width / (base.sheetSize.X + 1)) * scale), (int)Math.Round((textureImage.Height / (base.sheetSize.Y + 1)) * scale));
+            base.origin = new Vector2(((textureImage.Width / (base.sheetSize.X + 1) / 2)), ((textureImage.Height / (base.sheetSize.Y + 1) / 2)));
+
+            frameshift = 1;
+
+            float containerScale = (float)((float)frameSize.X / (float)((healthTextureList["container"].Width)));
+            float barScale = (float)((float)frameSize.X / (float)((healthTextureList["bar"].Width)));
+
+            healthContainer = new HealthContainerSprite(healthTextureList["container"],
+                new Vector2(position.X, (position.Y + frameSize.Y) - healthTextureList["container"].Height), new Point(0, 0),
+                new Point(0, 0), new Vector2(0, 0), 400, containerScale, new Color(255, 255, 255, 0));
+
+            //healthContainer.SetScale((float)((float)frameSize.X / (float)((healthTextureList["container"].Width / (healthContainer.GetSheetSize.X + 1)))));
+            
+            //healthContainer.frameSize = new Point(base.frameSize.X, healthContainer.frameSize.Y - 4);
+            healthBar = new HealthBarSprite(healthTextureList["bar"],
+                new Vector2(position.X, (position.Y + frameSize.Y) - healthTextureList["container"].Height), new Point(0, 0),
+                new Point(0, 0), new Vector2(0, 0), 400, barScale, new Color(0, 255, 0, 0));
+            //healthBar.SetScale((float)((float)frameSize.X / (float)((healthTextureList["bar"].Width / (healthContainer.GetSheetSize.X + 1)))));
+            //healthBar.frameSize = new Point(frameSize.X, healthContainer.frameSize.Y);
         }
 
-        public override Vector2 direction
+        public int GetId()
         {
-            get { return speed; }
+            return id;
+        }
+
+        public bool IsDone()
+        {
+            return isDone;
+        }
+
+        public void Hit(int damage)
+        {
+            currentHealth -= damage;
+            isHit = true;
+        }
+
+        public bool IsDead()
+        {
+            if (currentHealth <= 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override Vector2 GetDirection()
+        {
+            return direction;
         }
 
         public Vector2 UpdatePosition(List<MapSprite> pathList)
         {
-            MapSprite currentPathSprite = null;
+            //MapSprite currentPathSprite = null;
             Vector2 newPosition = position;
-            float offset = 0.0f;
+            //float offset = 0.0f;
 
-
-
-
-            if (direction.X < 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
+            if(lastTile + 1 < pathList.Count)
             {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
+                if (pathList[lastTile + 1].GetPosition.X > pathList[lastTile].GetPosition.X)
                 {
-                    offset = ((position.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
+                    newPosition.X += speed.X;
 
-                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) - pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
-                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
+                    SetDirection(new Vector2(speed.X, 0));
+                    if (newPosition.X > pathList[lastTile + 1].GetPosition.X)
                     {
-                        currentPathSprite = pathList[index];
+                        lastTile = lastTile + 1;
+
+                        if (lastTile == pathList.Count - 1 || pathList[lastTile + 1].GetPosition.X == pathList[lastTile].GetPosition.X)
+                        {
+                            newPosition.X = pathList[lastTile].GetPosition.X;
+                            newPosition.Y = pathList[lastTile].GetPosition.Y;
+                        }
                     }
                 }
-
-                if (position.Y % pathList[0].GetFrameSize.Y == 0)
+                else if (pathList[lastTile + 1].GetPosition.X < pathList[lastTile].GetPosition.X)
                 {
+                    newPosition.X -= speed.X;
 
-                }
-                if (currentPathSprite != null)
-                {
-                    newPosition.X += direction.X;
-                }
-                else
-                {
-                    offset = position.X % pathList[0].GetFrameSize.X;
-
-                    if (offset > Math.Abs(direction.X))
+                    SetDirection(new Vector2(-speed.X, 0));
+                    if (newPosition.X <= pathList[lastTile + 1].GetPosition.X)
                     {
-                        newPosition.X += direction.X;
-                    }
-                    else
-                    {
-                        newPosition.X -= (position.X % pathList[0].GetFrameSize.X);
+                        lastTile = lastTile + 1;
+
+                        if (lastTile == pathList.Count - 1 || pathList[lastTile + 1].GetPosition.X == pathList[lastTile].GetPosition.X)
+                        {
+                            newPosition.X = pathList[lastTile].GetPosition.X;
+                            newPosition.Y = pathList[lastTile].GetPosition.Y;
+                        }
                     }
 
+                }
+                else if (pathList[lastTile + 1].GetPosition.Y > pathList[lastTile].GetPosition.Y)
+                {
+                    newPosition.Y += speed.Y;
+
+                    SetDirection(new Vector2(0, speed.Y));
+                    if (newPosition.Y > pathList[lastTile + 1].GetPosition.Y)
+                    {
+                        lastTile = lastTile + 1;
+
+                        if (lastTile == pathList.Count - 1 || pathList[lastTile + 1].GetPosition.Y == pathList[lastTile].GetPosition.Y)
+                        {
+                            newPosition.X = pathList[lastTile].GetPosition.X;
+                            newPosition.Y = pathList[lastTile].GetPosition.Y;
+                        }
+                    }
+
+                }
+                else if (pathList[lastTile + 1].GetPosition.Y < pathList[lastTile].GetPosition.Y)
+                {
+                    newPosition.Y -= speed.Y;
+
+                    SetDirection(new Vector2(0, -speed.Y));
+                    if (newPosition.Y <= pathList[lastTile + 1].GetPosition.Y)
+                    {
+                        lastTile = lastTile + 1;
+
+                        if (lastTile == pathList.Count - 1 || pathList[lastTile + 1].GetPosition.Y == pathList[lastTile].GetPosition.Y)
+                        {
+                            newPosition.X = pathList[lastTile].GetPosition.X;
+                            newPosition.Y = pathList[lastTile].GetPosition.Y;
+                        }
+                    }
+
+                }
+
+                if (lastTile == pathList.Count - 1)
+                {
+                    isDone = true;
                 }
             }
-
-            if (direction.X > 0 && position.Y % pathList[0].GetFrameSize.Y == 0)
-            {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
-                {
-                    offset = ((position.X + pathList[index].GetFrameSize.X + direction.X) - (pathList[index].GetCurrentFrame.X /*+ pathList[index].GetFrameSize.X*/));
-
-                    if (((position.X - (position.X % pathList[index].GetFrameSize.X)) + pathList[index].GetFrameSize.X) == pathList[index].GetCurrentFrame.X &&
-                          (position.Y - (position.Y % pathList[index].GetFrameSize.Y)) == pathList[index].GetCurrentFrame.Y)
-                    {
-                        currentPathSprite = pathList[index];
-                    }
-                }
-
-                if (currentPathSprite != null)
-                {
-                    newPosition.X += direction.X;
-                }
-                else
-                {
-                    offset = position.X % pathList[0].GetFrameSize.X;
-
-                    if (offset > Math.Abs(direction.X))
-                    {
-                        newPosition.X += direction.X;
-                    }
-                    else
-                    {
-                        newPosition.X -= (position.X % pathList[0].GetFrameSize.X);
-                    }
-
-                }
-            }
-
-            if (direction.Y < 0 && position.X % pathList[0].GetFrameSize.X == 0)
-            {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
-                {
-                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) - pathList[index].GetFrameSize.Y) == pathList[index].GetCurrentFrame.Y &&
-                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetCurrentFrame.X)
-                    {
-                        currentPathSprite = pathList[index];
-                    }
-                }
-
-                if (currentPathSprite != null)
-                {
-                    newPosition.Y += direction.Y;
-                }
-                else
-                {
-                    offset = position.Y % pathList[0].GetFrameSize.Y;
-
-                    if (offset > Math.Abs(direction.Y))
-                    {
-                        newPosition.Y += direction.Y;
-                    }
-                    else
-                    {
-                        newPosition.Y -= (position.Y % pathList[0].GetFrameSize.Y);
-                    }
-
-                }
-            }
-
-            if (direction.Y > 0 && position.X % pathList[0].GetFrameSize.X == 0)
-            {
-                currentPathSprite = null;
-                for (int index = 0; index < pathList.Count; index++)
-                {
-                    if (((position.Y - (position.Y % pathList[index].GetFrameSize.Y)) + pathList[index].GetFrameSize.Y) == pathList[index].GetCurrentFrame.Y &&
-                          (position.X - (position.X % pathList[index].GetFrameSize.X)) == pathList[index].GetCurrentFrame.X)
-                    {
-                        currentPathSprite = pathList[index];
-                    }
-                }
-
-                if (currentPathSprite != null)
-                {
-                    newPosition.Y += direction.Y;
-                }
-                else
-                {
-                    offset = (position.Y) % pathList[0].GetFrameSize.Y;
-
-
-
-                    if (offset > Math.Abs(direction.Y))
-                    {
-                        newPosition.Y += direction.Y;
-                    }
-                    else
-                    {
-                        newPosition.Y -= offset;
-                    }
-
-                }
-            }
-
+            
             return newPosition;
         }
 
@@ -204,11 +195,11 @@ namespace TSAUMDHG
                         SetSpriteEffect(SpriteEffects.FlipHorizontally);
                     }
 
-                    currentFrame.X++;
+                    currentFrame.X += frameshift;
                     currentFrame.Y = 2;
-                    if (currentFrame.X > GetSheetSize.X)
+                    if ((currentFrame.X == sheetSize.X && frameshift > 0) || (currentFrame.X == 0 && frameshift < 0))
                     {
-                        currentFrame.X = 0;
+                        frameshift *= -1;
                     }
                 }
                 else
@@ -221,14 +212,45 @@ namespace TSAUMDHG
                     {
                         currentFrame.Y = 1;
                     }
-                    currentFrame.X++;
-                    if(currentFrame.X > GetSheetSize.X)
+                    currentFrame.X += frameshift;
+                    if ((currentFrame.X == sheetSize.X && frameshift > 0) || (currentFrame.X == 0 && frameshift < 0))
                     {
-                        currentFrame.X = 0;
+                        frameshift *= -1;
                     }
                 }
             }
+
+            if (isHit)
+            {
+                int i = 3;
+                i += 3;
+            }
+
+            healthContainer.Update(gameTime,
+                new Vector2(position.X, ((position.Y + frameSize.Y) - healthTextureList["container"].Height)), isHit);
+            healthBar.Update(gameTime,
+                new Vector2(position.X, ((position.Y + frameSize.Y) - healthTextureList["container"].Height)), isHit,
+                (float)((float)currentHealth / (float)maxHealth));
+
+            if (isHit)
+            {
+                isHit = false;
+            }
             //base.Update(gameTime, clientBounds);
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            //Draw the sprite
+            spriteBatch.Draw(base.textureImage,
+                new Rectangle(((int)position.X + unitOffset.X), ((int)position.Y + unitOffset.Y), frameSize.X, frameSize.Y),
+                new Rectangle((currentFrame.X) * (textureImage.Width / (base.GetSheetSize.X + 1)),
+                    (currentFrame.Y) * (textureImage.Height / (base.GetSheetSize.Y + 1)),
+                    (textureImage.Width / (base.GetSheetSize.X + 1)), (textureImage.Height / (base.GetSheetSize.Y + 1))),
+                color, rotation, origin, GetSpriteEffect(), (1 / (position.Y + frameSize.Y)));
+
+            healthContainer.Draw(gameTime, spriteBatch, unitOffset);
+            healthBar.Draw(gameTime, spriteBatch, unitOffset);
         }
     }
 }
