@@ -2,139 +2,13 @@
 <XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
   <Asset Type="Pipeline:BuildItemCollection">
     <Item>
-      <Source>Images\background.JPG</Source>
-      <Name>Images\background</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\background.xnb</Output>
-      <Time>2010-02-19T23:23:15.842523-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\bolt.png</Source>
-      <Name>Images\bolt</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\bolt.xnb</Output>
-      <Time>2010-02-19T23:23:15.8465232-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\fourblades.png</Source>
-      <Name>Images\fourblades</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\fourblades.xnb</Output>
-      <Time>2010-02-19T23:23:16.1965433-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\plus.png</Source>
-      <Name>Images\plus</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\plus.xnb</Output>
-      <Time>2010-02-19T23:23:16.2005435-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\skullball.png</Source>
-      <Name>Images\skullball</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\skullball.xnb</Output>
-      <Time>2010-02-19T23:23:16.2235448-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\threeblades.png</Source>
-      <Name>Images\threeblades</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\threeblades.xnb</Output>
-      <Time>2010-02-19T23:23:16.2255449-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Images\threerings.png</Source>
-      <Name>Images\threerings</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\threerings.xnb</Output>
-      <Time>2010-02-19T23:23:16.2285451-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\boltcollision.wav</Source>
-      <Name>Audio\boltcollision</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\boltcollision.xnb</Output>
-      <Time>2010-02-19T23:24:08.1555151-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\fourbladescollision.wav</Source>
-      <Name>Audio\fourbladescollision</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\fourbladescollision.xnb</Output>
-      <Time>2010-02-19T23:24:08.1615155-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\pluscollision.wav</Source>
-      <Name>Audio\pluscollision</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\pluscollision.xnb</Output>
-      <Time>2010-02-19T23:24:08.1975175-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\skullcollision.wav</Source>
-      <Name>Audio\skullcollision</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\skullcollision.xnb</Output>
-      <Time>2010-02-19T23:24:08.2005177-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\start.wav</Source>
-      <Name>Audio\start</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\start.xnb</Output>
-      <Time>2010-02-19T23:24:08.2035179-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\threebladescollision.wav</Source>
-      <Name>Audio\threebladescollision</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\threebladescollision.xnb</Output>
-      <Time>2010-02-19T23:24:08.2085182-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Audio\track.wav</Source>
-      <Name>Audio\track</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Audio\track.xnb</Output>
-      <Time>2010-02-19T23:24:08.2455203-05:00</Time>
-    </Item>
-    <Item>
-      <Source>Font\Arial.spritefont</Source>
-      <Name>Font\Arial</Name>
+      <Source>Font\arial.spritefont</Source>
+      <Name>Font\arial</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Font\Arial.xnb</Output>
-      <Time>2010-02-19T23:25:07.6299169-05:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Font\arial.xnb</Output>
+      <Time>2010-06-24T21:42:49.9267578-04:00</Time>
     </Item>
     <Item>
       <Source>Images\bend.png</Source>
@@ -142,8 +16,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\bend.xnb</Output>
-      <Time>2010-02-20T00:30:46.1151854-05:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\bend.xnb</Output>
+      <Time>2010-05-27T13:30:11.1816406-04:00</Time>
     </Item>
     <Item>
       <Source>Images\grass.png</Source>
@@ -151,8 +25,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\grass.xnb</Output>
-      <Time>2010-02-20T00:30:46.1181855-05:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\grass.xnb</Output>
+      <Time>2010-05-27T13:30:11.1904296-04:00</Time>
     </Item>
     <Item>
       <Source>Images\path.png</Source>
@@ -160,8 +34,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\path.xnb</Output>
-      <Time>2010-02-20T00:30:46.1191856-05:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\path.xnb</Output>
+      <Time>2010-05-27T13:30:11.1923828-04:00</Time>
     </Item>
     <Item>
       <Source>Images\acid.png</Source>
@@ -169,8 +43,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\acid.xnb</Output>
-      <Time>2010-03-14T15:42:41.8717122-04:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\acid.xnb</Output>
+      <Time>2010-05-27T13:30:11.1757812-04:00</Time>
     </Item>
     <Item>
       <Source>Images\tower.png</Source>
@@ -178,8 +52,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\tower.xnb</Output>
-      <Time>2010-03-29T22:20:38.0984918-04:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\tower.xnb</Output>
+      <Time>2010-07-05T23:03:07.2646484-04:00</Time>
     </Item>
     <Item>
       <Source>Images\unit.png</Source>
@@ -187,18 +61,109 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\Images\unit.xnb</Output>
-      <Time>2010-03-29T22:46:44.2923612-04:00</Time>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\unit.xnb</Output>
+      <Time>2010-05-27T13:30:11.2099609-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\cursor.png</Source>
+      <Name>Images\cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\cursor.xnb</Output>
+      <Time>2010-06-26T17:01:34.9694838-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\menuBackground.png</Source>
+      <Name>Images\menuBackground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\menuBackground.xnb</Output>
+      <Time>2010-06-26T17:31:38.6553025-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\rangeCircle.png</Source>
+      <Name>Images\rangeCircle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\rangeCircle.xnb</Output>
+      <Time>2010-07-08T00:01:47.7832031-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\tower_.png</Source>
+      <Name>Images\tower_</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\tower_.xnb</Output>
+      <Time>2010-06-28T22:14:35.2593672-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\healthContainer.png</Source>
+      <Name>Images\healthContainer</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\healthContainer.xnb</Output>
+      <Time>2010-07-02T20:54:20.359375-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\Title.png</Source>
+      <Name>Images\Title</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\Title.xnb</Output>
+      <Time>2010-07-03T02:07:55.7070312-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\acid_bomb_projectile.png</Source>
+      <Name>Images\acid_bomb_projectile</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Images\acid_bomb_projectile.xnb</Output>
+      <Time>2010-07-06T00:27:23.4833984-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Audio\splat.wav</Source>
+      <Name>Audio\splat</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Audio\splat.xnb</Output>
+      <Time>2010-06-22T19:58:10.6689453-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Music\bg.mp3</Source>
+      <Name>Music\bg</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Music\bg.xnb</Output>
+      <Extra>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Music\bg.wma</Extra>
+      <Time>2010-06-22T20:41:55.3232421-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Effects\desaturate.fx</Source>
+      <Name>Effects\desaturate</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\Effects\desaturate.xnb</Output>
+      <Time>2010-07-18T15:59:07.9426508-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Emikos\Documents\Visual Studio 2008\Projects\TSAUMDHG\TSAUMDHG\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Emikos\TSAUMDHG\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Emikos\TSAUMDHG\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Emikos\TSAUMDHG\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Emikos\TSAUMDHG\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

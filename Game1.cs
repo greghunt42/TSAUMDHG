@@ -37,7 +37,9 @@ namespace TSAUMDHG
         //SpriteFont scoreFont;
 
         //Background
-        //Texture2D backgroundTexture;
+        Texture2D backgroundTexture;
+
+        SpriteFont font;
 
         //Game states
         enum GameState { Start, InGame, GameOver };
@@ -101,6 +103,9 @@ namespace TSAUMDHG
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            backgroundTexture = this.Content.Load<Texture2D>(@"images\title");
+            font = this.Content.Load<SpriteFont>(@"font\arial");
+
             //Load audio objects
             //audioEngine = new AudioEngine(@"Content\Audio\GameAudio.xgs");
             //waveBank = new WaveBank(audioEngine, @"Content\Audio\Wave Bank.xwb");
@@ -141,9 +146,13 @@ namespace TSAUMDHG
             switch (currentGameState)
             {
                 case GameState.Start:
-                    currentGameState = GameState.InGame;
-                    spriteManager.Enabled = true;
-                    spriteManager.Visible = true;
+                    //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                    //    Keyboard.GetState().IsKeyDown(Keys.Space))
+                    //{
+                        currentGameState = GameState.InGame;
+                        spriteManager.Enabled = true;
+                        spriteManager.Visible = true;
+                    //}
                     break;
                 case GameState.InGame:
                     break;
@@ -170,7 +179,7 @@ namespace TSAUMDHG
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Only draw certain items based on
+                              // Only draw certain items based on
             // the current game state
             switch (currentGameState)
             {
@@ -179,15 +188,18 @@ namespace TSAUMDHG
                     
                     // Draw text for intro splash screen
                     spriteBatch.Begin();
-/*
-                    string text = "Avoid the blades or die!";
-                    spriteBatch.DrawString(scoreFont, text,
-                        new Vector2((Window.ClientBounds.Width / 2)
-                            - (scoreFont.MeasureString(text).X / 2),
-                            (Window.ClientBounds.Height / 2)
-                            - (scoreFont.MeasureString(text).Y / 2)),
-                            Color.SaddleBrown);
 
+                    spriteBatch.Draw(backgroundTexture,
+                        new Rectangle(0, 0, Window.ClientBounds.Width,
+                        Window.ClientBounds.Height), null,
+                        Color.White, 0, Vector2.Zero,
+                        SpriteEffects.None, 0);
+
+                    string text = "Press Space to Play!";
+                    spriteBatch.DrawString(font, text,
+                        new Vector2(200, 500),
+                            Color.PaleGoldenrod);
+/*
                     text = "(Press any key to begin)";
                     spriteBatch.DrawString(scoreFont, text,
                         new Vector2((Window.ClientBounds.Width / 2)

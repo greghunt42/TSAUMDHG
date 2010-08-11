@@ -7,20 +7,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TSAUMDHG
 {
-    abstract class Sprite
+    public abstract class Sprite
     {
         public Texture2D textureImage { get; private set; }
         protected Vector2 position;
-        protected Point frameSize;
-        int collisionOffset;
+
+        public Point collisionOffset { get; set; }
         protected Point currentFrame;
-        Point sheetSize;
         int timeSinceLastFrame = 0;
-        int millisecondsPerFrame;
+        public int millisecondsPerFrame { get; set; }
         const int defaultMillisecondsPerFrame = 16;
         protected float rotation;
-        protected Vector2 origin;
+        protected Vector2 direction;
         SpriteEffects effect = SpriteEffects.None;
+        public Color color = new Color();
+        private float layerDepth = 1.0f;
         
         //Speed
         protected Vector2 speed;
@@ -29,51 +30,51 @@ namespace TSAUMDHG
         //Scale
         protected float scale = 1;
         protected float originalScale = 1;
-        
+
+        public void SetLayerDepth(float layerDepth)
+        {
+            this.layerDepth = layerDepth;
+        }
+
+        public Point frameSize { get; set; }
+
+        public Point sheetSize { get; set; }
+
+        public Vector2 origin { get; set; }
+
         //Audio cue name for collisions
         public string collisionCueName { get; private set; }
 
         //Scoring
         public int scoreValue { get; protected set; }
 
-
-        public abstract Vector2 direction
-        {
-            get;
-        }
-
-        public Rectangle collisionRect
+        public virtual Rectangle collisionRect
         {
             get
             {
                 return new Rectangle(
-                (int)(position.X + (collisionOffset * scale)),
-                (int)(position.Y + (collisionOffset * scale)),
-                (int)((frameSize.X - (collisionOffset * 2)) * scale),
-                (int)((frameSize.Y - (collisionOffset * 2)) * scale));
+                (int)Math.Round(position.X),
+                (int)Math.Round(position.Y),
+                (int)Math.Round((double)(frameSize.X)),
+                (int)Math.Round((double)frameSize.Y));
             }
         }
 
         public Sprite(Texture2D textureImage, Vector2 position, Point frameSize,
-            int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed,
-            string collisionCueName, int scoreValue, float scale, float rotation, Vector2 origin)
+            Point collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed,
+            string collisionCueName, int scoreValue, float scale, float rotation, Vector2 origin,
+            Color color)
             : this(textureImage, position, frameSize, collisionOffset, currentFrame,
             sheetSize, speed, defaultMillisecondsPerFrame, collisionCueName,
-            scoreValue, rotation, origin)
+            scoreValue, scale, rotation, origin, color)
         {
             this.scale = scale;
         }
+
         public Sprite(Texture2D textureImage, Vector2 position, Point frameSize,
-            int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed,
-            string collisionCueName, int scoreValue, float rotation, Vector2 origin)
-            : this(textureImage, position, frameSize, collisionOffset, currentFrame,
-            sheetSize, speed, defaultMillisecondsPerFrame, collisionCueName,
-            scoreValue, rotation, origin)
-        {
-        }
-        public Sprite(Texture2D textureImage, Vector2 position, Point frameSize,
-            int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed,
-            int millisecondsPerFrame, string collisionCueName, int scoreValue, float rotation, Vector2 origin)
+            Point collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed,
+            int millisecondsPerFrame, string collisionCueName, int scoreValue, float scale, float rotation,
+            Vector2 origin, Color color)
         {
             this.textureImage = textureImage;
             this.position = position;
@@ -88,6 +89,9 @@ namespace TSAUMDHG
             this.scoreValue = scoreValue;
             this.rotation = rotation;
             this.origin = origin;
+            this.color = color;
+            this.scale = scale;
+            SetDirection(Vector2.Zero);
         }
 
         public virtual void Update(GameTime gameTime, Rectangle clientBounds)
@@ -112,13 +116,38 @@ namespace TSAUMDHG
         {
             //Draw the sprite
             spriteBatch.Draw(textureImage,
+                new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y),
+                new Rectangle((currentFrame.X) * (textureImage.Width / (GetSheetSize.X + 1)),
+                    (currentFrame.Y) * (textureImage.Height / (GetSheetSize.Y + 1)),
+                    (textureImage.Width / (sheetSize.X + 1)), (textureImage.Height / (sheetSize.Y + 1))),
+                color, rotation, origin, SpriteEffects.None, (float)Math.Abs(1 / (position.Y + frameSize.Y)));
+        }
+
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, float layerDepth)
+        {
+            //Draw the sprite
+            spriteBatch.Draw(textureImage,
+                new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y),
+                new Rectangle((currentFrame.X) * (textureImage.Width / (GetSheetSize.X + 1)),
+                    (currentFrame.Y) * (textureImage.Height / (GetSheetSize.Y + 1)),
+                    (textureImage.Width / (sheetSize.X + 1)), (textureImage.Height / (sheetSize.Y + 1))),
+                color, rotation, origin, SpriteEffects.None, layerDepth);
+        }
+
+/*
+            spriteBatch.Draw(base.textureImage,
+                new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y),
+                new Rectangle(0, 0, textureImage.Height, textureImage.Width),
+                color, rotation, origin, SpriteEffects.None, 0);
+            */
+            /*spriteBatch.Draw(textureImage,
                 position,
                 new Rectangle(currentFrame.X * frameSize.X,
                     currentFrame.Y * frameSize.Y,
                     frameSize.X, frameSize.Y),
-                Color.White, rotation, origin,
-                scale, effect, 0);
-        }
+                color, rotation, origin,
+                scale, effect, 0);*/
+        //}
 
         public bool IsOutOfBounds(Rectangle clientRect)
         {
@@ -142,6 +171,11 @@ namespace TSAUMDHG
             this.effect = effect;
         }
 
+        public SpriteEffects GetSpriteEffect()
+        {
+            return effect;
+        }
+
         public Point GetCurrentFrame
         {
             get { return currentFrame; }
@@ -162,6 +196,16 @@ namespace TSAUMDHG
             get { return frameSize; }
         }
 
+        public void SetDirection(Vector2 direction)
+        {
+            this.direction = direction;
+        }
+
+        public virtual Vector2 GetDirection()
+        {
+            return direction;
+        }
+
         public void ModifyScale(float modifier)
         {
             scale *= modifier;
@@ -170,6 +214,16 @@ namespace TSAUMDHG
         public void ResetScale()
         {
             scale = originalScale;
+        }
+
+        public float GetScale()
+        {
+            return scale;
+        }
+
+        public void SetScale(float scale)
+        {
+            this.scale = scale;
         }
 
         public void ModifySpeed(float modifier)
@@ -187,7 +241,14 @@ namespace TSAUMDHG
             float value;
 
             value = (float)Math.Atan2(ypos2 - ypos1, xpos2 - xpos1);
-            return (float)(value * (180 / Math.PI) + 90);
+            value = (float)(value * (180 / Math.PI) + 90);
+
+            //if (value < 0)
+            //{
+            //    value = 360 + value;
+            //}
+
+            return value;
         }
 
     }
