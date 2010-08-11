@@ -75,6 +75,8 @@ namespace TSAUMDHG
             //Set game window size
             graphics.PreferredBackBufferHeight = 800;
             graphics.PreferredBackBufferWidth = 1280;
+
+            graphics.MinimumPixelShaderProfile = ShaderProfile.PS_2_0;
         }
 
         /// <summary>
@@ -211,7 +213,7 @@ namespace TSAUMDHG
                     spriteBatch.End();
                     break;
                 case GameState.InGame:
-                    GraphicsDevice.Clear(Color.Black);
+                    GraphicsDevice.Clear(Color.Violet);
                     spriteBatch.Begin();
                     
                     // Draw background image
